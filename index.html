@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+  GlyphGrid
+  Copyright (c) 2025 NQR
+  Licensed under the MIT License - see LICENSE file for details.
+  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GlyphGrid is a manual-first cryptogram helper for simple substitution ciphers. Type plaintext guesses, enforce one-to-one mappings, and highlight all instances."/>
+  <title>GlyphGrid</title>
+
+  <style>
+    /* ==============================
+       Design tokens / theme
+    ============================== */
+    :root{
+      --bg:#171a26;            /* deep indigo background */
+      --panel:#20253a;         /* panel gradient base (not used directly) */
+      --muted:#2a3152;
+      --ink:#e6e8f2;           /* primary text */
+      --ink-dim:#b7bfdd;       /* dimmed text */
+      --accent:#6ee7ff;
+      --good:#67f5a8;
+      --warn:#ffcc66;
+      --outline:#8aa2ff;
+      --danger:#ff6b6b;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:14px;
+
+      /* Ciphertext font (user-changeable via UI).
+         We scope this only where ciphertext is displayed, not plaintext slots. */
+      --cipher-font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* ==============================
+       Global resets & layout
+    ============================== */
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1200px 600px at 15% -10%, #273056 0%, rgba(23,26,38,0) 60%),
+        var(--bg);
+      color:var(--ink);
+      line-height:1.4;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap{ max-width:1200px; margin:32px auto; padding:0 20px; }
+    h1{ font-size:20px; font-weight:700; letter-spacing:.3px; margin:0 0 6px; }
+    .sub{ color:var(--ink-dim); font-size:13px; margin-bottom:18px; }
+
+    /* Card */
+    .card{
+      background:linear-gradient(180deg, #1d2238, #1a2036);
+      border:1px solid #2b3254;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .card + .card{ margin-top:16px; } /* spacing between stacked cards */
+
+    .card-header{
+      display:flex; align-items:center; gap:10px;
+      padding:14px 16px;
+      border-bottom:1px solid #2b3254;
+    }
+    .badge{
+      font-size:12px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:var(--muted);
+      color:var(--ink-dim);
+    }
+
+    /* Ciphertext tools (font picker) */
+    .tools{
+      display:flex; gap:8px; align-items:center; margin-left:auto;
+    }
+    .tools label{ font-size:12px; color:#aab5e7; }
+    .tools select,
+    .tools input[type="text"]{
+      background:#151a33; color:#e6e8f2; border:1px solid #2b3254;
+      border-radius:8px; padding:6px 8px; font-size:12px;
+    }
+    .tools input[type="text"]{ padding:6px 10px; width:260px; }
+    .tools input[type="file"]{ font-size:12px; color:#e6e8f2; }
+
+    /* Alphabet row (plaintext availability) */
+    .alphabet{ display:flex; flex-wrap:wrap; gap:6px; padding:14px; }
+    .alpha{
+      width:30px; height:30px; display:grid; place-items:center;
+      border-radius:8px; border:1px solid #39406a;
+      color:var(--ink-dim); background:#1d2240; position:relative;
+    }
+    .alpha.used{ opacity:.55; background:#141933; color:#7381b5; }
+    .alpha.used::after{
+      content:"✓"; position:absolute; right:4px; top:2px;
+      font-size:11px; color:var(--good);
+    }
+
+    /* Ciphertext editor area */
+    .editor{ padding:16px; display:grid; gap:14px; }
+
+    /* Where users paste/type the raw ciphertext;
+       uses the cipher font so non-Latin/symbol sets render well. */
+    .cipher-input{
+      width:100%; padding:12px 14px; min-height:68px; resize:vertical;
+      border-radius:12px; border:1px dashed #3a4272; background:#151a33;
+      color:var(--ink); font-family: var(--cipher-font);
+    }
+
+    .grid{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; padding:6px; }
+    .chunk{ display:grid; gap:6px; align-items:center; justify-items:center; }
+
+    /* Individual slot boxes (plaintext entries); these keep UI font */
+    .slot{
+      width:40px; height:48px; display:grid; place-items:center;
+      border-radius:10px; background:#151a33; border:1px solid #333c69;
+      font-size:20px; letter-spacing:1px; text-transform:uppercase;
+      outline:0; caret-color:var(--accent);
+    }
+    .slot[contenteditable="true"]:focus{
+      border-color:var(--outline); box-shadow:0 0 0 3px rgba(138,162,255,.25);
+    }
+    .slot.same-c{ box-shadow:0 0 0 2px var(--outline) inset; }
+
+    /* Non-letter “locked” boxes (punctuation/spaces) show ciphertext */
+    .slot.lock{ opacity:.6; font-family: var(--cipher-font); }
+
+    .under{ font-size:11px; color:#90a0d0; letter-spacing:2px; }
+    /* Cipher character label below each slot uses the cipher font */
+    .cipher-char{ font-size:12px; color:#7381b5; font-family: var(--cipher-font); }
+
+    .legend{
+      display:flex; flex-wrap:wrap; gap:8px; padding:12px 16px;
+      border-top:1px solid #2b3254; background:#181e38;
+      border-radius:0 0 var(--radius) var(--radius);
+    }
+    .legend .pill{
+      background:#121634; border:1px solid #2b3254;
+      border-radius:999px; padding:6px 10px; font-size:12px; color:#aab5e7;
+    }
+
+    /* Key table (Cipher row vs Plain row) */
+    .key{ margin-top:18px; }
+    .key .row{ display:grid; grid-template-columns:repeat(26,1fr); gap:6px; }
+    .key .cell{
+      height:34px; display:grid; place-items:center;
+      border-radius:8px; border:1px solid #333a66;
+      font-size:13px; background:#13183a; color:#aab5e7;
+    }
+    .key .label{ margin:8px 0 6px; color:#95a3d8; font-size:12px; }
+    .pairlist{ margin-top:12px; display:flex; flex-wrap:wrap; gap:8px; }
+    .pair{
+      font-size:12px; background:#121634; border:1px solid #2b3254;
+      color:#cfe1ff; padding:6px 10px; border-radius:999px;
+    }
+    .pair .c{ opacity:.7; font-family: var(--cipher-font); }
+
+    /* Only the Cipher row uses the cipher font */
+    #rowCipher .cell { font-family: var(--cipher-font); }
+    #rowPlain  .cell { font-family: inherit; }
+
+    .footer{ margin-top:18px; font-size:12px; color:#7f8ac3; }
+    .muted{ color:#7f8ac3; }
+
+    @media (max-width:720px){
+      .slot{ width:34px; height:44px; }
+      .alphabet{ justify-content:center; }
+      .key .row{ grid-template-columns:repeat(13,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>GlyphGrid - the manual cryptogram workbench</h1>
+    <div class="sub">
+      Enter any ciphertext, then click a slot and type the plaintext letter you think it represents.
+      Mappings are global: one plaintext letter can map to only one ciphertext letter. Press <b>Space</b>,
+      <b>Backspace</b>, or <b>Delete</b> to clear a mapping. Focusing a slot highlights all instances
+      of that ciphertext symbol.
+    </div>
+
+    <!-- =============== Alphabet (plaintext availability) =============== -->
+    <section class="card" id="alphabetCard" aria-labelledby="alphabetTitle">
+      <div class="card-header">
+        <span class="badge" id="alphabetTitle">Cleartext Alphabet • Used vs. Unused</span>
+      </div>
+      <div class="alphabet" id="alphabetRow" aria-live="polite"></div>
+    </section>
+
+    <!-- =============== Ciphertext editor =============== -->
+    <section class="card" aria-labelledby="cipherTitle">
+      <div class="card-header">
+        <span class="badge" id="cipherTitle">Ciphertext</span>
+
+        <!-- Font controls -->
+        <div class="tools" aria-label="Ciphertext font controls">
+          <label>
+            Font:
+            <select id="cipherFontSelect">
+              <option value='ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial'>Default UI Sans</option>
+              <option value='"Segoe UI Symbol", "Apple Symbols", "Arial Unicode MS", Symbola, "Noto Sans Symbols", "Noto Sans", sans-serif'>Unicode Symbols</option>
+              <option value='ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'>Monospace</option>
+              <option value='"Noto Sans", "Noto Serif", Arial, sans-serif'>Noto</option>
+              <option value='"Noto Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", emoji'>Emoji</option>
+              <option value='__custom__'>Custom:</option>
+            </select>
+          </label>
+
+          <input id="cipherFontCustom" type="text" placeholder='e.g. "Noto Sans Symbols 2", Symbola'
+                 title="Enter a CSS font-family (first family name, commas allowed)" />
+
+          <label>
+            Load font:
+            <input id="cipherFontFile" type="file" accept=".ttf,.otf,.woff,.woff2">
+          </label>
+        </div>
+      </div>
+
+      <div class="editor">
+        <!-- Default ciphertext from your earlier example -->
+        <textarea id="cipherInput" class="cipher-input"
+                  placeholder="Type or paste ciphertext here... (letters will get slots, everything else is shown as-is)"
+                  aria-label="Ciphertext input">VH KBNMJ NR VH UGRRUBXS. KJXNEH VJ.</textarea>
+
+        <!-- Slots grid (plaintext entries above each cipher symbol) -->
+        <div class="grid" id="slotsGrid" aria-label="Plaintext entry grid"></div>
+
+        <div class="legend" aria-hidden="true">
+          <span class="pill">Click a box, then type A–Z</span>
+          <span class="pill">Space/Backspace/Delete clears</span>
+          <span class="pill">← / → to move</span>
+          <span class="pill">Mappings update everywhere</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============== Key view (mapping) =============== -->
+    <section class="card key" aria-labelledby="keyTitle">
+      <div class="card-header">
+        <span class="badge" id="keyTitle">Current Key</span>
+      </div>
+      <div style="padding:12px 14px">
+        <div class="label">Cipher → Plain</div>
+        <div class="row" id="rowCipher" aria-label="Cipher letters A to Z"></div>
+        <div class="row" id="rowPlain" aria-label="Mapped plaintext letters"></div>
+        <div class="pairlist" id="pairList" aria-label="Active mappings list"></div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Tip: Click a slot to select, then type. Use ← / → to move between letter slots.
+      Everything is kept locally in your browser.
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+    /* =========================================================
+       Utilities & state
+    ========================================================= */
+    const A = "A".charCodeAt(0);
+    const letters = Array.from({length:26}, (_,i)=>String.fromCharCode(A+i));
+    const LETTER_RE = /[A-Za-z]/;
+    const SLOT_SELECTOR = '.slot[data-cipher]';
+
+    /** App state:
+     *  - mapping:  cipher letter -> plaintext letter (or null)
+     *  - reverse:  plaintext letter -> cipher letter (or null)
+     *  - cipherText: the raw ciphertext string
+     */
+    const state = {
+      mapping: Object.fromEntries(letters.map(l=>[l, null])),
+      reverse: Object.fromEntries(letters.map(l=>[l, null])),
+      cipherText: "",
+    };
+
+    // Cache DOM references once
+    const els = {
+      alphabetRow: document.getElementById('alphabetRow'),
+      cipherInput: document.getElementById('cipherInput'),
+      slotsGrid: document.getElementById('slotsGrid'),
+      rowCipher: document.getElementById('rowCipher'),
+      rowPlain: document.getElementById('rowPlain'),
+      pairList: document.getElementById('pairList'),
+      fontSelect: document.getElementById('cipherFontSelect'),
+      fontCustom: document.getElementById('cipherFontCustom'),
+      fontFile: document.getElementById('cipherFontFile'),
+    };
+
+    /* =========================================================
+       Build static UI parts
+    ========================================================= */
+    /** Build the A–Z plaintext alphabet chips and mark used ones. */
+    function buildAlphabet(){
+      els.alphabetRow.innerHTML = '';
+      letters.forEach(l=>{
+        const d = document.createElement('div');
+        d.className = 'alpha';
+        d.dataset.letter = l;
+        d.textContent = l;
+        els.alphabetRow.appendChild(d);
+      });
+    }
+
+    /** Update which plaintext letters are marked as 'used' (already mapped). */
+    function setAlphabetUsed(){
+      els.alphabetRow.querySelectorAll('.alpha').forEach(el=>{
+        const L = el.dataset.letter;
+        el.classList.toggle('used', state.reverse[L] !== null);
+      });
+    }
+
+    /** Render the key table and the list of active mappings. */
+    function renderKey(){
+      els.rowCipher.innerHTML = '';
+      els.rowPlain.innerHTML = '';
+
+      // Row 1: cipher letters A..Z
+      letters.forEach(l=>{
+        const c = document.createElement('div');
+        c.className='cell';
+        c.textContent = l;
+        els.rowCipher.appendChild(c);
+      });
+      // Row 2: mapped plaintext letters (or · if none)
+      letters.forEach(l=>{
+        const mapped = state.mapping[l] || '·';
+        const p = document.createElement('div');
+        p.className='cell';
+        p.textContent = mapped;
+        els.rowPlain.appendChild(p);
+      });
+
+      // Pair chips (C → P)
+      els.pairList.innerHTML = '';
+      letters.forEach(c=>{
+        const p = state.mapping[c];
+        if(p){
+          const tag = document.createElement('span');
+          tag.className='pair';
+          tag.innerHTML = `<span class="c">${c}</span> → <b>${p}</b>`;
+          els.pairList.appendChild(tag);
+        }
+      });
+    }
+
+    /* =========================================================
+       Slots grid (plaintext entry per cipher symbol)
+    ========================================================= */
+    /** Build the per-character slots for the current ciphertext. */
+    function buildSlots(){
+      els.slotsGrid.innerHTML = '';
+      const txt = state.cipherText || "";
+
+      for(let i=0;i<txt.length;i++){
+        const ch = txt[i];
+        const isLetter = LETTER_RE.test(ch);
+        const cipher = ch.toUpperCase();
+
+        const cell = document.createElement('div');
+        cell.className = 'chunk';
+
+        if(isLetter){
+          // Editable slot (plaintext input for this cipher letter)
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          slot.setAttribute('contenteditable','true');
+          slot.setAttribute('spellcheck','false');
+          slot.dataset.cipher = cipher;
+
+          // Initialize from current mapping
+          slot.textContent = state.mapping[cipher] ? state.mapping[cipher] : '';
+
+          // Focus/blur: highlight all identical cipher instances
+          slot.addEventListener('focus', ()=>highlightSame(cipher, true));
+          slot.addEventListener('blur',  ()=>highlightSame(cipher, false));
+
+          // Constrain input: single A–Z letter, or deletion/space to clear
+          slot.addEventListener('beforeinput', (e)=>{
+            if(e.inputType === 'insertText'){
+              const val = (e.data||'').toUpperCase();
+              if(!/^[A-Z]$/.test(val)){
+                if(val === ' '){ // allow space to clear
+                  e.preventDefault();
+                  assignMapping(cipher, null);
+                  refreshAll();
+                }else{
+                  e.preventDefault(); // block everything else
+                }
+                return;
+              }
+              e.preventDefault();
+              assignMapping(cipher, val);
+              refreshAll();
+              focusFirstOf(cipher); // keep focus on this cipher symbol
+            } else if(e.inputType && e.inputType.startsWith('delete')){
+              e.preventDefault();
+              assignMapping(cipher, null);
+              refreshAll();
+              focusFirstOf(cipher);
+            }
+          });
+
+          cell.appendChild(slot);
+
+          // Cipher label under the slot
+          const under = document.createElement('div');
+          under.className='under cipher-char';
+          under.textContent = cipher;
+          cell.appendChild(under);
+
+        } else {
+          // Non-letter characters show as locked boxes (visual context only)
+          const frozen = document.createElement('div');
+          frozen.className = 'slot lock';
+          frozen.textContent = ch; // punctuation/space
+          frozen.setAttribute('aria-hidden','true');
+          cell.appendChild(frozen);
+
+          const under = document.createElement('div');
+          under.className='under';
+          under.innerHTML='&nbsp;';
+          cell.appendChild(under);
+        }
+
+        els.slotsGrid.appendChild(cell);
+      }
+    }
+
+    /** Toggle the highlight ring for all slots sharing a given cipher letter. */
+    function highlightSame(cipher, on){
+      els.slotsGrid.querySelectorAll(`${SLOT_SELECTOR}[data-cipher="${cipher}"]`).forEach(el=>{
+        el.classList.toggle('same-c', on);
+      });
+    }
+
+    /** Focus the first slot of a given cipher letter (keeps caret at end). */
+    function focusFirstOf(cipher){
+      const target = els.slotsGrid.querySelector(`${SLOT_SELECTOR}[data-cipher="${cipher}"]`);
+      if(target){
+        placeCaretAtEnd(target);
+        target.focus({preventScroll:false});
+      }
+    }
+
+    /** Move focus to the previous/next LETTER slot (skips punctuation). */
+    function focusRelativeSlot(dir) {
+      const slots = Array.from(els.slotsGrid.querySelectorAll(SLOT_SELECTOR));
+      if (!slots.length) return;
+
+      let idx = slots.indexOf(document.activeElement);
+      if (idx === -1) idx = 0;
+      else {
+        idx += dir;
+        // Non-wrap behavior: clamp to ends.
+        if (idx < 0) idx = 0;
+        if (idx > slots.length - 1) idx = slots.length - 1;
+        // Wrap-around alternative:
+        // const n = slots.length; idx = (idx + n) % n;
+      }
+
+      const next = slots[idx];
+      next.focus({ preventScroll: false });
+      placeCaretAtEnd(next);
+      // Focus/blur events handle highlighting
+    }
+
+    /** Place the caret at the end of a contenteditable element. */
+    function placeCaretAtEnd(el){
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+
+    /* =========================================================
+       Font helpers (ciphertext only)
+    ========================================================= */
+    /** Set the cipher font across all ciphertext surfaces via CSS var. */
+    function setCipherFont(fontFamily) {
+      document.documentElement.style.setProperty('--cipher-font', fontFamily);
+      try { localStorage.setItem('cipherFont', fontFamily); } catch (e) {}
+    }
+
+    /** Load a local font file using the FontFace API and apply it. */
+    async function loadCustomFontFromFile(file) {
+      if (!file) return;
+      const base = file.name.replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/, '');
+      const familyName = `UserFont_${base.replace(/[^a-z0-9_\-]/gi, '') || 'Custom'}`;
+      const data = await file.arrayBuffer();
+      const face = new FontFace(familyName, data);
+      await face.load();
+      document.fonts.add(face);
+
+      // Apply the loaded face first, then any custom fallback list.
+      const fallback = els.fontCustom.value || 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+      const familyList = `"${familyName}", ${fallback}`;
+      setCipherFont(familyList);
+
+      // Update UI to reflect the active custom face
+      els.fontCustom.value = `"${familyName}"`;
+      if (els.fontSelect) els.fontSelect.value = '__custom__';
+    }
+
+    /* =========================================================
+       Mapping logic (one-to-one enforcement)
+    ========================================================= */
+    /** Assign plaintext to a cipher letter and keep reverse unique. */
+    function assignMapping(cipher, plain){
+      const prevPlain = state.mapping[cipher];
+      if(prevPlain === plain) return; // no change
+
+      // If assigning a new plain letter, free it from any prior owner
+      if(plain){
+        const prevOwner = state.reverse[plain];
+        if(prevOwner && prevOwner !== cipher){
+          state.mapping[prevOwner] = null;
+          state.reverse[plain] = null;
+        }
+      }
+
+      // Update forward & reverse
+      state.mapping[cipher] = plain || null;
+      if(prevPlain){ state.reverse[prevPlain] = null; }
+      if(plain){ state.reverse[plain] = cipher; }
+    }
+
+    /** Refresh all dependent UI based on the current mapping. */
+    function refreshAll(){
+      // Update every visible slot character from mapping
+      els.slotsGrid.querySelectorAll(SLOT_SELECTOR).forEach(el=>{
+        const c = el.dataset.cipher;
+        el.textContent = state.mapping[c] || '';
+      });
+      setAlphabetUsed();
+      renderKey();
+    }
+
+    /* =========================================================
+       Event wiring
+    ========================================================= */
+    // Update slots on ciphertext changes
+    els.cipherInput.addEventListener('input', ()=>{
+      state.cipherText = els.cipherInput.value;
+      buildSlots();
+      refreshAll();
+      // Optional persistence for ciphertext (uncomment if desired):
+      // try { localStorage.setItem('ciphertext', state.cipherText); } catch(e) {}
+    });
+
+    // Global keyboard shortcuts for slot editing & navigation
+    document.addEventListener('keydown', (e)=>{
+      const active = document.activeElement;
+
+      // Arrow navigation between slots (works when ANY slot is focused)
+      if (active && active.classList.contains('slot')) {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          focusRelativeSlot(e.key === 'ArrowRight' ? 1 : -1);
+          return;
+        }
+      }
+
+      // Letter entry / clearing for editable (letter) slots
+      if(active && active.classList.contains('slot') && active.dataset.cipher){
+        if(e.key.length === 1 && /[a-zA-Z ]/.test(e.key)){
+          const cipher = active.dataset.cipher;
+          const k = e.key.toUpperCase();
+          if(k === ' '){
+            assignMapping(cipher, null);
+            refreshAll();
+            focusFirstOf(cipher);
+            e.preventDefault();
+            return;
+          }
+          assignMapping(cipher, k);
+          refreshAll();
+          focusFirstOf(cipher);
+          e.preventDefault();
+        }
+        if(e.key === 'Backspace' || e.key === 'Delete'){
+          const cipher = active.dataset.cipher;
+          assignMapping(cipher, null);
+          refreshAll();
+          focusFirstOf(cipher);
+          e.preventDefault();
+        }
+      }
+    });
+
+    /* =========================================================
+       App init
+    ========================================================= */
+    buildAlphabet();
+    setAlphabetUsed();
+    renderKey();
+
+    // Restore saved ciphertext if you want persistence (commented by default):
+    // try { const saved = localStorage.getItem('ciphertext'); if (saved !== null) els.cipherInput.value = saved; } catch(e) {}
+
+    // Seed from textarea
+    state.cipherText = els.cipherInput.value;
+    buildSlots();
+    refreshAll();
+
+    // Restore saved font if any
+    try {
+      const savedFont = localStorage.getItem('cipherFont');
+      if (savedFont) setCipherFont(savedFont);
+    } catch (e) {}
+
+    // Font UI handlers
+    els.fontSelect.addEventListener('change', () => {
+      const val = els.fontSelect.value;
+      if (val === '__custom__') {
+        const custom = els.fontCustom.value.trim();
+        if (custom) setCipherFont(custom);
+      } else {
+        setCipherFont(val);
+      }
+    });
+    els.fontCustom.addEventListener('change', () => {
+      const custom = els.fontCustom.value.trim();
+      if (custom) {
+        setCipherFont(custom);
+        els.fontSelect.value = '__custom__';
+      }
+    });
+    els.fontFile.addEventListener('change', async () => {
+      const file = els.fontFile.files && els.fontFile.files[0];
+      if (file) {
+        try {
+          await loadCustomFontFromFile(file);
+        } catch (err) {
+          console.error(err);
+          alert('Could not load that font file. Try ttf/otf/woff/woff2.');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
