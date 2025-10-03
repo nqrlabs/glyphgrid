@@ -43,15 +43,27 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:
-        radial-gradient(1200px 600px at 15% -10%, #273056 0%, rgba(23,26,38,0) 60%),
-        var(--bg);
+      background-color: var(--bg);
+      overflow-x: hidden; /* safety: prevents horizontal scroll bars */
       color:var(--ink);
       line-height:1.4;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
     }
 
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      background:
+        radial-gradient(1200px 600px at 15% -10%, #273056 0%, rgba(23,26,38,0) 60%);
+      background-repeat:no-repeat;
+      background-position: top left;
+      background-size: 1200px 600px;
+    }
+    
     .wrap{ max-width:1200px; margin:32px auto; padding:0 20px; }
     h1{ font-size:20px; font-weight:700; letter-spacing:.3px; margin:0 0 6px; }
     .sub{ color:var(--ink-dim); font-size:13px; margin-bottom:18px; }
@@ -69,6 +81,7 @@
       display:flex; align-items:center; gap:10px;
       padding:14px 16px;
       border-bottom:1px solid #2b3254;
+      flex-wrap: wrap;
     }
     .badge{
       font-size:12px;
@@ -81,6 +94,8 @@
     /* Ciphertext tools (font picker) */
     .tools{
       display:flex; gap:8px; align-items:center; margin-left:auto;
+      flex-wrap: wrap;
+      min-width: 0;
     }
     .tools label{ font-size:12px; color:#aab5e7; }
     .tools select,
@@ -88,7 +103,7 @@
       background:#151a33; color:#e6e8f2; border:1px solid #2b3254;
       border-radius:8px; padding:6px 8px; font-size:12px;
     }
-    .tools input[type="text"]{ padding:6px 10px; width:260px; }
+    .tools input[type="text"]{ padding:6px 10px; width:260px; max-width: 100%; }
     .tools input[type="file"]{ font-size:12px; color:#e6e8f2; }
 
     /* Alphabet row (plaintext availability) */
@@ -174,6 +189,8 @@
       .slot{ width:34px; height:44px; }
       .alphabet{ justify-content:center; }
       .key .row{ grid-template-columns:repeat(13,1fr); }
+      .tools{ width:100%; }
+      .tools input[type="text"]{ width:100%; }
     }
   </style>
 </head>
