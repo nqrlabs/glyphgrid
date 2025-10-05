@@ -1,669 +1,1047 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
 <head>
-  <!--
-  GlyphGrid
-  Copyright (c) 2025 NQR
-  Licensed under the MIT License - see LICENSE file for details.
-  -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="GlyphGrid is a manual-first cryptogram helper for simple substitution ciphers. Type plaintext guesses, enforce one-to-one mappings, and highlight all instances."/>
-  <title>GlyphGrid</title>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GlyphGrid · the manual cryptogram workbench</title>
+  <meta name="description" content="A beautiful, manual-first cryptogram workbench with one-to-one mapping, live n-gram analysis, and handy English frequency hints.">
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    /* ==============================
-       Design tokens / theme
-    ============================== */
     :root{
-      --bg:#171a26;            /* deep indigo background */
-      --panel:#20253a;         /* panel gradient base (not used directly) */
-      --muted:#2a3152;
-      --ink:#e6e8f2;           /* primary text */
-      --ink-dim:#b7bfdd;       /* dimmed text */
-      --accent:#6ee7ff;
-      --good:#67f5a8;
-      --warn:#ffcc66;
-      --outline:#8aa2ff;
-      --danger:#ff6b6b;
-      --shadow:0 10px 30px rgba(0,0,0,.35);
-      --radius:14px;
-
-      /* Ciphertext font (user-changeable via UI).
-         We scope this only where ciphertext is displayed, not plaintext slots. */
-      --cipher-font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      --gg-bg:#0c1020;
+      --gg-card:#121735;
+      --gg-ink:#eef1ff;
+      --gg-ink-dim:#b9c6ef;
+      --gg-accent:#7cc9ff;
+      --gg-outline:#86a6ff;
+      --gg-border:#2b3868;
+      --cipher-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --hl-bigram:#ffd54f; --hl-trigram:#ff8a65; --hl-double:#81c784; --hl-len1:#4fc3f7; --hl-len2:#64b5f6; --hl-len3:#7986cb;
     }
 
-    /* ==============================
-       Global resets & layout
-    ============================== */
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-
+    html,body{height:100%}
     body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background-color: var(--bg);
-      overflow-x: hidden; /* safety: prevents horizontal scroll bars */
-      color:var(--ink);
-      line-height:1.4;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      background: var(--gg-bg);
+      color: var(--gg-ink);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
-
+    /* Fixed gradient background (non-tiled) */
     body::before{
       content:"";
-      position:fixed;
-      inset:0;
-      z-index:-1;
-      pointer-events:none;
+      position:fixed; inset:0; z-index:-1; pointer-events:none;
       background:
-        radial-gradient(1200px 600px at 15% -10%, #273056 0%, rgba(23,26,38,0) 60%);
+        radial-gradient(1200px 600px at 12% -10%, #273056 0%, rgba(23,26,38,0) 60%),
+        radial-gradient(1200px 600px at 88% 110%, #1f2648 0%, rgba(23,26,38,0) 55%);
       background-repeat:no-repeat;
-      background-position: top left;
-      background-size: 1200px 600px;
-    }
-    
-    .wrap{ max-width:1200px; margin:32px auto; padding:0 20px; }
-    h1{ font-size:20px; font-weight:700; letter-spacing:.3px; margin:0 0 6px; }
-    .sub{ color:var(--ink-dim); font-size:13px; margin-bottom:18px; }
-
-    /* Card */
-    .card{
-      background:linear-gradient(180deg, #1d2238, #1a2036);
-      border:1px solid #2b3254;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-    .card + .card{ margin-top:16px; } /* spacing between stacked cards */
-
-    .card-header{
-      display:flex; align-items:center; gap:10px;
-      padding:14px 16px;
-      border-bottom:1px solid #2b3254;
-      flex-wrap: wrap;
-    }
-    .badge{
-      font-size:12px;
-      padding:4px 10px;
-      border-radius:999px;
-      background:var(--muted);
-      color:var(--ink-dim);
+      background-attachment: fixed;
     }
 
-    /* Ciphertext tools (font picker) */
-    .tools{
-      display:flex; gap:8px; align-items:center; margin-left:auto;
-      flex-wrap: wrap;
-      min-width: 0;
+    .gg-card{
+      background: linear-gradient(180deg, #151c3b, #13183a);
+      border: 1px solid var(--gg-border);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    .tools label{ font-size:12px; color:#aab5e7; }
-    .tools select,
-    .tools input[type="text"]{
-      background:#151a33; color:#e6e8f2; border:1px solid #2b3254;
-      border-radius:8px; padding:6px 8px; font-size:12px;
-    }
-    .tools input[type="text"]{ padding:6px 10px; width:260px; max-width: 100%; }
-    .tools input[type="file"]{ font-size:12px; color:#e6e8f2; }
+    .gg-badge{ background:#1a2147; color:#a6b6f0; border:1px solid var(--gg-border) }
+    .gg-muted{ color: var(--gg-ink-dim) }
+    .gg-border{ border-color: var(--gg-border)!important; }
 
-    /* Alphabet row (plaintext availability) */
-    .alphabet{ display:flex; flex-wrap:wrap; gap:6px; padding:14px; }
+    .cipher-input, .plain-input{
+      width:100%; min-height: 86px; resize: vertical;
+      background:#0e1330; color:#fbfcff; border:1px dashed var(--gg-border);
+      border-radius: 12px; padding: 12px 14px;
+    }
+    .cipher-input{ font-family: var(--cipher-font); }
+    .plain-input{ font-family: inherit; }
+
+    .alphabet{ display:flex; flex-wrap:wrap; gap:.5rem; }
     .alpha{
-      width:30px; height:30px; display:grid; place-items:center;
-      border-radius:8px; border:1px solid #39406a;
-      color:var(--ink-dim); background:#1d2240; position:relative;
+      width: 34px; height: 34px; display:grid; place-items:center;
+      border:1px solid var(--gg-border); background:#18204a; color:#cfe1ff; border-radius:.75rem;
+      position:relative; font-weight:700; letter-spacing:.3px;
     }
-    .alpha.used{ opacity:.55; background:#141933; color:#7381b5; }
+    .alpha.used{ opacity:.6; background:#101534; color:#96a7e0; }
     .alpha.used::after{
-      content:"✓"; position:absolute; right:4px; top:2px;
-      font-size:11px; color:var(--good);
+      content:"✓"; position:absolute; top:2px; right:6px; font-size: .75rem; color:#67f5a8;
     }
 
-    /* Ciphertext editor area */
-    .editor{ padding:16px; display:grid; gap:14px; }
-
-    /* Where users paste/type the raw ciphertext;
-       uses the cipher font so non-Latin/symbol sets render well. */
-    .cipher-input{
-      width:100%; padding:12px 14px; min-height:68px; resize:vertical;
-      border-radius:12px; border:1px dashed #3a4272; background:#151a33;
-      color:var(--ink); font-family: var(--cipher-font);
-    }
-
-    .grid{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; padding:6px; }
-    .chunk{ display:grid; gap:6px; align-items:center; justify-items:center; }
-
-    /* Individual slot boxes (plaintext entries); these keep UI font */
+    .grid{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:flex-end; }
+    .chunk{ display:grid; gap:.3rem; justify-items:center; align-items:center; }
     .slot{
-      width:40px; height:48px; display:grid; place-items:center;
-      border-radius:10px; background:#151a33; border:1px solid #333c69;
-      font-size:20px; letter-spacing:1px; text-transform:uppercase;
-      outline:0; caret-color:var(--accent);
+      width:44px; height:52px; display:grid; place-items:center;
+      border-radius: .8rem; background:#0f1439; border:1px solid #3a4681;
+      color:#ffffff; font-weight:800; font-size:22px; letter-spacing:1px; text-transform:uppercase;
+      outline:0; caret-color: var(--gg-accent);
     }
-    .slot[contenteditable="true"]:focus{
-      border-color:var(--outline); box-shadow:0 0 0 3px rgba(138,162,255,.25);
-    }
-    .slot.same-c{ box-shadow:0 0 0 2px var(--outline) inset; }
+    .slot[contenteditable="true"]:focus{ border-color: var(--gg-outline); box-shadow: 0 0 0 .25rem rgba(134,166,255,.25); }
+    .slot.same-c{ box-shadow: inset 0 0 0 2px var(--gg-outline); }
+    .slot.lock{ opacity:.85; font-family: inherit; color:#e6ebff; }
+    .under{ font-size: .7rem; letter-spacing: .2rem; color:#a9b8ef; }
+    .cipher-char{ color:#a9b8ef; font-family: var(--cipher-font); }
 
-    /* Non-letter “locked” boxes (punctuation/spaces) show ciphertext */
-    .slot.lock{ opacity:.6; font-family: var(--cipher-font); }
-
-    .under{ font-size:11px; color:#90a0d0; letter-spacing:2px; }
-    /* Cipher character label below each slot uses the cipher font */
-    .cipher-char{ font-size:12px; color:#7381b5; font-family: var(--cipher-font); }
-
-    .legend{
-      display:flex; flex-wrap:wrap; gap:8px; padding:12px 16px;
-      border-top:1px solid #2b3254; background:#181e38;
-      border-radius:0 0 var(--radius) var(--radius);
-    }
-    .legend .pill{
-      background:#121634; border:1px solid #2b3254;
-      border-radius:999px; padding:6px 10px; font-size:12px; color:#aab5e7;
+    @media (max-width: 768px){
+      .slot{ width:38px; height:48px; font-size: 20px; }
     }
 
-    /* Key table (Cipher row vs Plain row) */
-    .key{ margin-top:18px; }
-    .key .row{ display:grid; grid-template-columns:repeat(26,1fr); gap:6px; }
-    .key .cell{
-      height:34px; display:grid; place-items:center;
-      border-radius:8px; border:1px solid #333a66;
-      font-size:13px; background:#13183a; color:#aab5e7;
-    }
-    .key .label{ margin:8px 0 6px; color:#95a3d8; font-size:12px; }
-    .pairlist{ margin-top:12px; display:flex; flex-wrap:wrap; gap:8px; }
-    .pair{
-      font-size:12px; background:#121634; border:1px solid #2b3254;
-      color:#cfe1ff; padding:6px 10px; border-radius:999px;
-    }
+    /* Key grid */
+    .kgrid{ display:grid; grid-template-columns: repeat(26, 1fr); gap:.4rem; }
+    .paircol{ display:grid; grid-template-rows:auto auto; gap:.4rem; }
+    .cell{ height: 36px; display:grid; place-items:center; border-radius: .6rem; background:#10173b; border:1px solid #2a3462; color:#ffffff; font-weight:700; }
+    .cell-cipher{ font-family: var(--cipher-font); color:#cfe1ff; font-weight:600; }
+    .pairlist{ display:flex; flex-wrap:wrap; gap:.4rem; }
+    .pair{ background:#0f1432; border:1px solid var(--gg-border); border-radius: 999px; padding:.35rem .6rem; color:#dce7ff; }
     .pair .c{ opacity:.7; font-family: var(--cipher-font); }
 
-    /* Only the Cipher row uses the cipher font */
-    #rowCipher .cell { font-family: var(--cipher-font); }
-    #rowPlain  .cell { font-family: inherit; }
-
-    .footer{ margin-top:18px; font-size:12px; color:#7f8ac3; }
-    .muted{ color:#7f8ac3; }
-
-    @media (max-width:720px){
-      .slot{ width:34px; height:44px; }
-      .alphabet{ justify-content:center; }
-      .key .row{ grid-template-columns:repeat(13,1fr); }
-      .tools{ width:100%; }
-      .tools input[type="text"]{ width:100%; }
+    @media (max-width: 768px){
+      .kgrid{ grid-template-columns: repeat(13, 1fr); }
     }
+
+    /* Highlights */
+    .hl-bigram{ outline:3px solid var(--hl-bigram); outline-offset:-2px; }
+    .hl-trigram{ outline:3px solid var(--hl-trigram); outline-offset:-2px; }
+    .hl-double{ outline:3px solid var(--hl-double); outline-offset:-2px; }
+    .hl-len1{ box-shadow:0 0 0 3px var(--hl-len1) inset; }
+    .hl-len2{ box-shadow:0 0 0 3px var(--hl-len2) inset; }
+    .hl-len3{ box-shadow:0 0 0 3px var(--hl-len3) inset; }
+
+    /* Pulse for click-to-flash */
+    @keyframes pulseOutline { 0% { box-shadow:0 0 0 0 rgba(110,231,255,.9);} 100% { box-shadow:0 0 0 14px rgba(110,231,255,0);} }
+    .pulse { animation: pulseOutline 1s ease-out 1; }
+
+    /* Floating panels (non-blocking) */
+    .panel-float{
+      position: fixed; right: 16px; top: 72px;
+      width: min(520px, 96vw); max-height: calc(100vh - 88px);
+      overflow:auto; z-index: 1055;
+      background: #0f1432; border:1px solid var(--gg-border); border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45);
+      display:none;
+    }
+    .panel-float.show{ display:block; }
+    .panel-float .panel-header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:.5rem; padding:.6rem .8rem; border-bottom:1px solid var(--gg-border);
+      background: #12183a;
+    }
+    .panel-float .panel-body{ padding:.8rem; }
+    .panel-title{ margin:0; font-size:1rem; }
+    .badge-soft{ background:#1b2149; color:#a6b6f0; }
+
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>GlyphGrid - the manual cryptogram workbench</h1>
-    <div class="sub">
-      Enter any ciphertext, then click a slot and type the plaintext letter you think it represents.
-      Mappings are global: one plaintext letter can map to only one ciphertext letter. Press <b>Space</b>,
-      <b>Backspace</b>, or <b>Delete</b> to clear a mapping. Focusing a slot highlights all instances
-      of that ciphertext symbol.
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-md bg-body-tertiary sticky-top border-bottom border-dark-subtle">
+    <div class="container-lg">
+      <a class="navbar-brand fw-bold" href="#">GlyphGrid</a>
+      <span class="navbar-text small text-secondary ms-1">the manual cryptogram workbench</span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navc" aria-controls="navc" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div id="navc" class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><button class="btn btn-outline-info ms-md-2" id="btnToggleHintsNav">Hints</button></li>
+          <li class="nav-item ms-2"><button class="btn btn-outline-info" id="btnToggleAnalysisNav">Analysis</button></li>
+        </ul>
+      </div>
     </div>
+  </nav>
 
-    <!-- =============== Alphabet (plaintext availability) =============== -->
-    <section class="card" id="alphabetCard" aria-labelledby="alphabetTitle">
-      <div class="card-header">
-        <span class="badge" id="alphabetTitle">Cleartext Alphabet • Used vs. Unused</span>
+  <main class="container-lg my-4">
+    <!-- Use My Plaintext -->
+    <section class="gg-card p-3 mb-3" id="ownCard" aria-labelledby="ownTitle">
+      <div class="d-flex align-items-center gap-2 pb-2 border-bottom gg-border">
+        <span class="badge rounded-pill gg-badge" id="ownTitle">Use My Plaintext</span>
+        <div class="ms-auto d-flex gap-2">
+          <button id="btnEncryptMine" class="btn btn-primary">Encrypt my text</button>
+        </div>
       </div>
-      <div class="alphabet" id="alphabetRow" aria-live="polite"></div>
+      <div class="pt-3">
+        <textarea id="myPlaintext" class="plain-input" placeholder="Type or paste your PLAINTEXT here (not the puzzle). After you click Encrypt, the plaintext stays visible for tweaks."></textarea>
+      </div>
     </section>
 
-    <!-- =============== Ciphertext editor =============== -->
-    <section class="card" aria-labelledby="cipherTitle">
-      <div class="card-header">
-        <span class="badge" id="cipherTitle">Ciphertext</span>
-
-        <!-- Font controls -->
-        <div class="tools" aria-label="Ciphertext font controls">
-          <label>
-            Font:
-            <select id="cipherFontSelect">
-              <option value='ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial'>Default UI Sans</option>
-              <option value='"Segoe UI Symbol", "Apple Symbols", "Arial Unicode MS", Symbola, "Noto Sans Symbols", "Noto Sans", sans-serif'>Unicode Symbols</option>
-              <option value='ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'>Monospace</option>
-              <option value='"Noto Sans", "Noto Serif", Arial, sans-serif'>Noto</option>
-              <option value='"Noto Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", emoji'>Emoji</option>
-              <option value='__custom__'>Custom:</option>
+    <!-- Generator -->
+    <section class="gg-card p-3 mb-3" id="makerCard" aria-labelledby="makerTitle">
+      <div class="d-flex align-items-center gap-2 pb-2 border-bottom gg-border">
+        <span class="badge rounded-pill gg-badge" id="makerTitle">Make a Cryptogram</span>
+        <div class="ms-auto d-flex flex-wrap gap-2 align-items-center">
+          <div class="d-flex align-items-center gap-1">
+            <label class="small text-secondary me-1">Theme</label>
+            <select id="makeTheme" class="form-select form-select-sm" style="min-width:160px"></select>
+          </div>
+          <div class="d-flex align-items-center gap-1">
+            <label class="small text-secondary me-1">Difficulty</label>
+            <select id="makeDiff" class="form-select form-select-sm">
+              <option value="easy">Easy (long)</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard (short)</option>
             </select>
-          </label>
-
-          <input id="cipherFontCustom" type="text" placeholder='e.g. "Noto Sans Symbols 2", Symbola'
-                 title="Enter a CSS font-family (first family name, commas allowed)" />
-
-          <label>
-            Load font:
-            <input id="cipherFontFile" type="file" accept=".ttf,.otf,.woff,.woff2">
-          </label>
-        </div>
-      </div>
-
-      <div class="editor">
-        <!-- Default ciphertext from your earlier example -->
-        <textarea id="cipherInput" class="cipher-input"
-                  placeholder="Type or paste ciphertext here... (letters will get slots, everything else is shown as-is)"
-                  aria-label="Ciphertext input">VH KBNMJ NR VH UGRRUBXS. KJXNEH VJ.</textarea>
-
-        <!-- Slots grid (plaintext entries above each cipher symbol) -->
-        <div class="grid" id="slotsGrid" aria-label="Plaintext entry grid"></div>
-
-        <div class="legend" aria-hidden="true">
-          <span class="pill">Click a box, then type A–Z</span>
-          <span class="pill">Space/Backspace/Delete clears</span>
-          <span class="pill">← / → to move</span>
-          <span class="pill">Mappings update everywhere</span>
+          </div>
+          <button id="btnSurprise" class="btn btn-success btn-sm">Surprise me</button>
+          <button id="btnNewKey" class="btn btn-outline-light btn-sm" title="Same hidden text, different key">New key</button>
         </div>
       </div>
     </section>
 
-    <!-- =============== Key view (mapping) =============== -->
-    <section class="card key" aria-labelledby="keyTitle">
-      <div class="card-header">
-        <span class="badge" id="keyTitle">Current Key</span>
+    <!-- Alphabet -->
+    <section class="gg-card p-3 mb-3" id="alphabetCard" aria-labelledby="alphabetTitle">
+      <div class="d-flex align-items-center gap-2 pb-2 border-bottom gg-border">
+        <span class="badge rounded-pill gg-badge" id="alphabetTitle">Cleartext Alphabet • Used vs. Unused</span>
       </div>
-      <div style="padding:12px 14px">
-        <div class="label">Cipher → Plain</div>
-        <div class="row" id="rowCipher" aria-label="Cipher letters A to Z"></div>
-        <div class="row" id="rowPlain" aria-label="Mapped plaintext letters"></div>
-        <div class="pairlist" id="pairList" aria-label="Active mappings list"></div>
+      <div class="alphabet pt-3" id="alphabetRow" aria-live="polite"></div>
+    </section>
+
+    <!-- Ciphertext -->
+    <section class="gg-card p-3 mb-3" aria-labelledby="cipherTitle">
+      <div class="d-flex align-items-center gap-2 pb-2 border-bottom gg-border">
+        <span class="badge rounded-pill gg-badge" id="cipherTitle">Ciphertext</span>
+
+        <!-- Consolidated toolbar for consistency -->
+        <div class="ms-auto w-100 w-md-auto">
+          <div class="row g-2 align-items-center">
+            <div class="col-12 col-md-auto">
+              <button id="btnNewKeySolver" class="btn btn-outline-light btn-sm w-100" title="Same hidden text, different key">New key</button>
+            </div>
+            <div class="col-12 col-md-auto">
+              <div class="d-flex align-items-center gap-1">
+                <label class="small text-secondary me-1">Font</label>
+                <select id="cipherFontSelect" class="form-select form-select-sm">
+                  <option value='ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial'>Default UI Sans</option>
+                  <option value='"Segoe UI Symbol", "Apple Symbols", "Arial Unicode MS", Symbola, "Noto Sans Symbols", "Noto Sans", sans-serif'>Unicode Symbols</option>
+                  <option value='ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'>Monospace</option>
+                  <option value='"Noto Sans", "Noto Serif", Arial, sans-serif'>Noto</option>
+                  <option value='"Noto Emoji", "Apple Color Emoji", "Segoe UI Emoji", "Twemoji Mozilla", emoji'>Emoji</option>
+                  <option value='__custom__'>Custom…</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12 col-md">
+              <input id="cipherFontCustom" class="form-control form-control-sm" type="text" placeholder='e.g. "Noto Sans Symbols 2", Symbola' title="Enter a CSS font-family (first family name, commas allowed)" />
+            </div>
+            <div class="col-12 col-md-auto">
+              <div class="d-flex align-items-center gap-1">
+                <label class="small text-secondary me-1">Load</label>
+                <input id="cipherFontFile" class="form-control form-control-sm" type="file" accept=".ttf,.otf,.woff,.woff2">
+              </div>
+            </div>
+</div>
+        </div>
+      </div>
+
+      <div class="pt-3">
+        <textarea id="cipherInput" class="cipher-input" aria-label="Ciphertext input">VH KBNMJ NR VH UGRRUBXS. KJXNEH VJ.</textarea>
+
+        <div class="mt-3 grid" id="slotsGrid" aria-label="Plaintext entry grid"></div>
+
+        <div class="row g-2 mt-2">
+          <div class="col-12 col-xl d-flex flex-wrap gap-2">
+            <span class="badge rounded-pill text-bg-secondary">Type A–Z into a slot</span>
+            <span class="badge rounded-pill text-bg-secondary">Space/Backspace/Delete clears</span>
+            <span class="badge rounded-pill text-bg-secondary">← / → to move</span>
+            <span class="badge rounded-pill text-bg-secondary">Mappings update everywhere</span>
+          </div>
+          <div class="col-12 col-xl-auto d-flex flex-wrap gap-2">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="chkBigrams">
+              <label class="form-check-label small" for="chkBigrams">Highlight bigrams</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="chkTrigrams">
+              <label class="form-check-label small" for="chkTrigrams">Highlight trigrams</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="chkDoubles">
+              <label class="form-check-label small" for="chkDoubles">Double letters</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="chkLen1">
+              <label class="form-check-label small" for="chkLen1">1-letter words</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="chkLen2">
+              <label class="form-check-label small" for="chkLen2">2-letter words</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="chkLen3">
+              <label class="form-check-label small" for="chkLen3">3-letter words</label>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <div class="footer">
-      Tip: Click a slot to select, then type. Use ← / → to move between letter slots.
-      Everything is kept locally in your browser.
+    <!-- Key -->
+    <section class="gg-card p-3 mb-4" aria-labelledby="keyTitle">
+      <div class="d-flex align-items-center gap-2 pb-2 border-bottom gg-border">
+        <span class="badge rounded-pill gg-badge" id="keyTitle">Current Key</span>
+      </div>
+      <div class="pt-3">
+        <div class="text-secondary small mb-2">Cipher → Plain</div>
+        <div class="kgrid" id="keyGrid"></div>
+        <div class="pairlist mt-3" id="pairList"></div>
+      </div>
+    </section>
+
+    <p class="text-secondary small mb-5">Tip: Click a slot to select, then type. Use ← / → to move between letter slots. Everything happens locally in your browser.</p>
+  </main>
+
+  <!-- Floating Analysis Panel (non-blocking) -->
+  <div id="panelAnalysis" class="panel-float" aria-live="polite" aria-label="Ciphertext analysis">
+    <div class="panel-header">
+      <h3 class="panel-title">Ciphertext analysis</h3>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-light" id="btnCloseAnalysis">Close</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="mb-2">
+        <h6 class="text-info mb-1">Solver Tips</h6>
+        <ul class="small" id="tipsList" style="margin-bottom:.5rem"></ul>
+      </div>
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="card bg-dark-subtle border-0">
+            <div class="card-body">
+              <h6 class="card-title">Top ciphertext letters</h6>
+              <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                  <thead><tr><th>Letter</th><th class="text-end">Count</th><th class="text-end">%</th></tr></thead>
+                  <tbody id="tblFreq"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="card bg-dark-subtle border-0">
+            <div class="card-body">
+              <h6 class="card-title">Repeating bigrams</h6>
+              <div id="listBigrams" class="d-flex flex-wrap gap-2 small"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <div class="card bg-dark-subtle border-0">
+            <div class="card-body">
+              <h6 class="card-title">Repeating trigrams</h6>
+              <div id="listTrigrams" class="d-flex flex-wrap gap-2 small"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Floating Hints Panel (non-blocking) -->
+  <div id="panelHints" class="panel-float" aria-hidden="true" aria-labelledby="hintsTitle">
+    <div class="panel-header">
+      <h3 class="panel-title" id="hintsTitle">English frequency hints</h3>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-light" id="btnCloseHints">Close</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <div class="card bg-dark border-0 h-100">
+            <div class="card-body">
+              <h6 class="card-title">Top letter frequencies</h6>
+              <div class="table-responsive" style="max-height:280px">
+                <table class="table table-sm align-middle">
+                  <thead><tr><th>Letter</th><th class="text-end">%</th></tr></thead>
+                  <tbody id="hintLetters"></tbody>
+                </table>
+              </div>
+              <div class="text-secondary small">Source: Wikipedia “Letter frequency”.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card bg-dark border-0 h-100">
+            <div class="card-body">
+              <h6 class="card-title">Top bigrams</h6>
+              <div id="hintBigrams" class="d-flex flex-wrap gap-2 small"></div>
+              <div class="text-secondary small">Source: Emory MathCenter / Wellesley.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="card bg-dark border-0 h-100">
+            <div class="card-body">
+              <h6 class="card-title">Top trigrams</h6>
+              <div id="hintTrigrams" class="d-flex flex-wrap gap-2 small"></div>
+              <div class="text-secondary small">Source: Emory MathCenter.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card bg-dark border-0 h-100">
+            <div class="card-body">
+              <h6 class="card-title">Common doubled letters</h6>
+              <div id="hintDoubles" class="d-flex flex-wrap gap-2 small"></div>
+              <div class="text-secondary small">Source: UIC analysis of 3.2M letters.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <div class="card bg-dark border-0 h-100">
+            <div class="card-body">
+              <h6 class="card-title">Word-start & end tendencies</h6>
+              <div id="hintWordPos"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card bg-dark border-0">
+            <div class="card-body">
+              <h6 class="card-title">Try these first (tiny words)</h6>
+              <div id="hintTiny1" class="d-flex flex-wrap gap-2 small mb-2"></div>
+              <div id="hintTiny2" class="d-flex flex-wrap gap-2 small mb-2"></div>
+              <div id="hintTiny3" class="d-flex flex-wrap gap-2 small"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
-    "use strict";
-    /* =========================================================
-       Utilities & state
-    ========================================================= */
-    const A = "A".charCodeAt(0);
-    const letters = Array.from({length:26}, (_,i)=>String.fromCharCode(A+i));
-    const LETTER_RE = /[A-Za-z]/;
-    const SLOT_SELECTOR = '.slot[data-cipher]';
+  "use strict";
+  const A = "A".charCodeAt(0);
+  const letters = Array.from({length:26}, (_,i)=>String.fromCharCode(A+i));
+  const LETTER_RE = /[A-Za-z]/;
+  const SLOT_SELECTOR = '.slot[data-cipher]';
 
-    /** App state:
-     *  - mapping:  cipher letter -> plaintext letter (or null)
-     *  - reverse:  plaintext letter -> cipher letter (or null)
-     *  - cipherText: the raw ciphertext string
-     */
-    const state = {
-      mapping: Object.fromEntries(letters.map(l=>[l, null])),
-      reverse: Object.fromEntries(letters.map(l=>[l, null])),
-      cipherText: "",
-    };
+  const state = {
+    mapping: Object.fromEntries(letters.map(l=>[l, null])),
+    reverse: Object.fromEntries(letters.map(l=>[l, null])),
+    cipherText: "",
+    _hiddenPlaintext: null,
+    _activeKey: null,
+    _seed: null,
+    highlights: { bigrams:false, trigrams:false, doubles:false, len1:false, len2:false, len3:false },
+    analysisOpen:false
+  };
 
-    // Cache DOM references once
-    const els = {
-      alphabetRow: document.getElementById('alphabetRow'),
-      cipherInput: document.getElementById('cipherInput'),
-      slotsGrid: document.getElementById('slotsGrid'),
-      rowCipher: document.getElementById('rowCipher'),
-      rowPlain: document.getElementById('rowPlain'),
-      pairList: document.getElementById('pairList'),
-      fontSelect: document.getElementById('cipherFontSelect'),
-      fontCustom: document.getElementById('cipherFontCustom'),
-      fontFile: document.getElementById('cipherFontFile'),
-    };
+  const els = {
+    // Option A
+    myPlaintext: document.getElementById('myPlaintext'),
+    btnEncryptMine: document.getElementById('btnEncryptMine'),
+    // Maker
+    makeTheme: document.getElementById('makeTheme'),
+    makeDiff: document.getElementById('makeDiff'),
+    btnSurprise: document.getElementById('btnSurprise'),
+    btnNewKey: document.getElementById('btnNewKey'),
+    // Solver
+    alphabetRow: document.getElementById('alphabetRow'),
+    cipherInput: document.getElementById('cipherInput'),
+    slotsGrid: document.getElementById('slotsGrid'),
+    keyGrid: document.getElementById('keyGrid'),
+    pairList: document.getElementById('pairList'),
+    btnNewKeySolver: document.getElementById('btnNewKeySolver'),
+    // Fonts
+    fontSelect: document.getElementById('cipherFontSelect'),
+    fontCustom: document.getElementById('cipherFontCustom'),
+    fontFile: document.getElementById('cipherFontFile'),
+    // Analysis toggles
+    chkBigrams: document.getElementById('chkBigrams'),
+    chkTrigrams: document.getElementById('chkTrigrams'),
+    chkDoubles: document.getElementById('chkDoubles'),
+    chkLen1: document.getElementById('chkLen1'),
+    chkLen2: document.getElementById('chkLen2'),
+    chkLen3: document.getElementById('chkLen3'),
+    // Panels & buttons
+    panelAnalysis: document.getElementById('panelAnalysis'),
+    panelHints: document.getElementById('panelHints'),
+    btnShowAnalysis: document.getElementById('btnShowAnalysis'),
+    btnToggleAnalysisNav: document.getElementById('btnToggleAnalysisNav'),
+    btnCloseAnalysis: document.getElementById('btnCloseAnalysis'),
+    btnToggleHintsNav: document.getElementById('btnToggleHintsNav'),
+    btnToggleHintsSection: document.getElementById('btnToggleHintsSection'),
+    btnCloseHints: document.getElementById('btnCloseHints'),
+    // Analysis content
+    tipsList: document.getElementById('tipsList'),
+    tblFreq: document.getElementById('tblFreq'),
+    listBigrams: document.getElementById('listBigrams'),
+    listTrigrams: document.getElementById('listTrigrams'),
+    // Hints content
+    hintLetters: document.getElementById('hintLetters'),
+    hintBigrams: document.getElementById('hintBigrams'),
+    hintTrigrams: document.getElementById('hintTrigrams'),
+    hintDoubles: document.getElementById('hintDoubles'),
+    hintWordPos: document.getElementById('hintWordPos'),
+    hintTiny1: document.getElementById('hintTiny1'),
+    hintTiny2: document.getElementById('hintTiny2'),
+    hintTiny3: document.getElementById('hintTiny3'),
+  };
 
-    /* =========================================================
-       Build static UI parts
-    ========================================================= */
-    /** Build the A–Z plaintext alphabet chips and mark used ones. */
-    function buildAlphabet(){
-      els.alphabetRow.innerHTML = '';
-      letters.forEach(l=>{
-        const d = document.createElement('div');
-        d.className = 'alpha';
-        d.dataset.letter = l;
-        d.textContent = l;
-        els.alphabetRow.appendChild(d);
-      });
+  function updateButtons(){
+    const canRekeyStored = !!state._hiddenPlaintext;
+    els.btnNewKey.disabled = !canRekeyStored;
+    els.btnNewKeySolver.disabled = !canRekeyStored;
+    els.btnNewKey.title = canRekeyStored ? "Same hidden text, different key" : "Disabled: no active plaintext";
+    els.btnNewKeySolver.title = els.btnNewKey.title;
+  }
+
+  /* ---------- Alphabet & Key ---------- */
+  function buildAlphabet(){
+    els.alphabetRow.innerHTML='';
+    for(const l of letters){
+      const d=document.createElement('div');
+      d.className='alpha'; d.dataset.letter=l; d.textContent=l;
+      els.alphabetRow.appendChild(d);
     }
-
-    /** Update which plaintext letters are marked as 'used' (already mapped). */
-    function setAlphabetUsed(){
-      els.alphabetRow.querySelectorAll('.alpha').forEach(el=>{
-        const L = el.dataset.letter;
-        el.classList.toggle('used', state.reverse[L] !== null);
-      });
+  }
+  function setAlphabetUsed(){
+    els.alphabetRow.querySelectorAll('.alpha').forEach(el=>{
+      const L=el.dataset.letter; el.classList.toggle('used', state.reverse[L] !== null);
+    });
+  }
+  function renderKey(){
+    els.keyGrid.innerHTML='';
+    for(const l of letters){
+      const col=document.createElement('div'); col.className='paircol';
+      const top=document.createElement('div'); top.className='cell cell-cipher'; top.textContent=l;
+      const bottom=document.createElement('div'); bottom.className='cell cell-plain'; bottom.textContent=state.mapping[l]||'·';
+      col.append(top,bottom); els.keyGrid.appendChild(col);
     }
-
-    /** Render the key table and the list of active mappings. */
-    function renderKey(){
-      els.rowCipher.innerHTML = '';
-      els.rowPlain.innerHTML = '';
-
-      // Row 1: cipher letters A..Z
-      letters.forEach(l=>{
-        const c = document.createElement('div');
-        c.className='cell';
-        c.textContent = l;
-        els.rowCipher.appendChild(c);
-      });
-      // Row 2: mapped plaintext letters (or · if none)
-      letters.forEach(l=>{
-        const mapped = state.mapping[l] || '·';
-        const p = document.createElement('div');
-        p.className='cell';
-        p.textContent = mapped;
-        els.rowPlain.appendChild(p);
-      });
-
-      // Pair chips (C → P)
-      els.pairList.innerHTML = '';
-      letters.forEach(c=>{
-        const p = state.mapping[c];
-        if(p){
-          const tag = document.createElement('span');
-          tag.className='pair';
-          tag.innerHTML = `<span class="c">${c}</span> → <b>${p}</b>`;
-          els.pairList.appendChild(tag);
-        }
-      });
+    els.pairList.innerHTML='';
+    for(const c of letters){
+      const p=state.mapping[c];
+      if(p){
+        const tag=document.createElement('span'); tag.className='pair';
+        tag.innerHTML = '<span class="c">'+c+'</span> → <b>'+p+'</b>';
+        els.pairList.appendChild(tag);
+      }
     }
+  }
 
-    /* =========================================================
-       Slots grid (plaintext entry per cipher symbol)
-    ========================================================= */
-    /** Build the per-character slots for the current ciphertext. */
-    function buildSlots(){
-      els.slotsGrid.innerHTML = '';
-      const txt = state.cipherText || "";
-
-      for(let i=0;i<txt.length;i++){
-        const ch = txt[i];
-        const isLetter = LETTER_RE.test(ch);
-        const cipher = ch.toUpperCase();
-
-        const cell = document.createElement('div');
-        cell.className = 'chunk';
-
-        if(isLetter){
-          // Editable slot (plaintext input for this cipher letter)
-          const slot = document.createElement('div');
-          slot.className = 'slot';
-          slot.setAttribute('contenteditable','true');
-          slot.setAttribute('spellcheck','false');
-          slot.dataset.cipher = cipher;
-
-          // Initialize from current mapping
-          slot.textContent = state.mapping[cipher] ? state.mapping[cipher] : '';
-
-          // Focus/blur: highlight all identical cipher instances
-          slot.addEventListener('focus', ()=>highlightSame(cipher, true));
-          slot.addEventListener('blur',  ()=>highlightSame(cipher, false));
-
-          // Constrain input: single A–Z letter, or deletion/space to clear
-          slot.addEventListener('beforeinput', (e)=>{
-            if(e.inputType === 'insertText'){
-              const val = (e.data||'').toUpperCase();
-              if(!/^[A-Z]$/.test(val)){
-                if(val === ' '){ // allow space to clear
-                  e.preventDefault();
-                  assignMapping(cipher, null);
-                  refreshAll();
-                }else{
-                  e.preventDefault(); // block everything else
-                }
-                return;
-              }
-              e.preventDefault();
-              assignMapping(cipher, val);
-              refreshAll();
-              focusFirstOf(cipher); // keep focus on this cipher symbol
-            } else if(e.inputType && e.inputType.startsWith('delete')){
-              e.preventDefault();
-              assignMapping(cipher, null);
-              refreshAll();
-              focusFirstOf(cipher);
+  /* ---------- Grid ---------- */
+  function buildSlots(){
+    els.slotsGrid.innerHTML='';
+    const txt=state.cipherText||'';
+    for(let i=0;i<txt.length;i++){
+      const ch=txt[i]; const isLetter=LETTER_RE.test(ch); const cipher=ch.toUpperCase();
+      const cell=document.createElement('div'); cell.className='chunk';
+      if(isLetter){
+        const slot=document.createElement('div');
+        slot.className='slot'; slot.setAttribute('contenteditable','true'); slot.setAttribute('spellcheck','false');
+        slot.dataset.cipher=cipher; slot.dataset.index=i;
+        slot.textContent=state.mapping[cipher]||'';
+        slot.addEventListener('focus',()=>highlightSame(cipher,true));
+        slot.addEventListener('blur', ()=>highlightSame(cipher,false));
+        slot.addEventListener('beforeinput',(e)=>{
+          const here=slot;
+          if(e.inputType==='insertText'){
+            const val=(e.data||'').toUpperCase();
+            if(!/^[A-Z]$/.test(val)){
+              if(val===' '){ e.preventDefault(); assignMapping(cipher,null); refreshAll(); refocus(here); }
+              else e.preventDefault();
+              return;
             }
-          });
-
-          cell.appendChild(slot);
-
-          // Cipher label under the slot
-          const under = document.createElement('div');
-          under.className='under cipher-char';
-          under.textContent = cipher;
-          cell.appendChild(under);
-
-        } else {
-          // Non-letter characters show as locked boxes (visual context only)
-          const frozen = document.createElement('div');
-          frozen.className = 'slot lock';
-          frozen.textContent = ch; // punctuation/space
-          frozen.setAttribute('aria-hidden','true');
-          cell.appendChild(frozen);
-
-          const under = document.createElement('div');
-          under.className='under';
-          under.innerHTML='&nbsp;';
-          cell.appendChild(under);
-        }
-
-        els.slotsGrid.appendChild(cell);
-      }
-    }
-
-    /** Toggle the highlight ring for all slots sharing a given cipher letter. */
-    function highlightSame(cipher, on){
-      els.slotsGrid.querySelectorAll(`${SLOT_SELECTOR}[data-cipher="${cipher}"]`).forEach(el=>{
-        el.classList.toggle('same-c', on);
-      });
-    }
-
-    /** Focus the first slot of a given cipher letter (keeps caret at end). */
-    function focusFirstOf(cipher){
-      const target = els.slotsGrid.querySelector(`${SLOT_SELECTOR}[data-cipher="${cipher}"]`);
-      if(target){
-        placeCaretAtEnd(target);
-        target.focus({preventScroll:false});
-      }
-    }
-
-    /** Move focus to the previous/next LETTER slot (skips punctuation). */
-    function focusRelativeSlot(dir) {
-      const slots = Array.from(els.slotsGrid.querySelectorAll(SLOT_SELECTOR));
-      if (!slots.length) return;
-
-      let idx = slots.indexOf(document.activeElement);
-      if (idx === -1) idx = 0;
-      else {
-        idx += dir;
-        // Non-wrap behavior: clamp to ends.
-        if (idx < 0) idx = 0;
-        if (idx > slots.length - 1) idx = slots.length - 1;
-        // Wrap-around alternative:
-        // const n = slots.length; idx = (idx + n) % n;
-      }
-
-      const next = slots[idx];
-      next.focus({ preventScroll: false });
-      placeCaretAtEnd(next);
-      // Focus/blur events handle highlighting
-    }
-
-    /** Place the caret at the end of a contenteditable element. */
-    function placeCaretAtEnd(el){
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
-
-    /* =========================================================
-       Font helpers (ciphertext only)
-    ========================================================= */
-    /** Set the cipher font across all ciphertext surfaces via CSS var. */
-    function setCipherFont(fontFamily) {
-      document.documentElement.style.setProperty('--cipher-font', fontFamily);
-      try { localStorage.setItem('cipherFont', fontFamily); } catch (e) {}
-    }
-
-    /** Load a local font file using the FontFace API and apply it. */
-    async function loadCustomFontFromFile(file) {
-      if (!file) return;
-      const base = file.name.replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/, '');
-      const familyName = `UserFont_${base.replace(/[^a-z0-9_\-]/gi, '') || 'Custom'}`;
-      const data = await file.arrayBuffer();
-      const face = new FontFace(familyName, data);
-      await face.load();
-      document.fonts.add(face);
-
-      // Apply the loaded face first, then any custom fallback list.
-      const fallback = els.fontCustom.value || 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
-      const familyList = `"${familyName}", ${fallback}`;
-      setCipherFont(familyList);
-
-      // Update UI to reflect the active custom face
-      els.fontCustom.value = `"${familyName}"`;
-      if (els.fontSelect) els.fontSelect.value = '__custom__';
-    }
-
-    /* =========================================================
-       Mapping logic (one-to-one enforcement)
-    ========================================================= */
-    /** Assign plaintext to a cipher letter and keep reverse unique. */
-    function assignMapping(cipher, plain){
-      const prevPlain = state.mapping[cipher];
-      if(prevPlain === plain) return; // no change
-
-      // If assigning a new plain letter, free it from any prior owner
-      if(plain){
-        const prevOwner = state.reverse[plain];
-        if(prevOwner && prevOwner !== cipher){
-          state.mapping[prevOwner] = null;
-          state.reverse[plain] = null;
-        }
-      }
-
-      // Update forward & reverse
-      state.mapping[cipher] = plain || null;
-      if(prevPlain){ state.reverse[prevPlain] = null; }
-      if(plain){ state.reverse[plain] = cipher; }
-    }
-
-    /** Refresh all dependent UI based on the current mapping. */
-    function refreshAll(){
-      // Update every visible slot character from mapping
-      els.slotsGrid.querySelectorAll(SLOT_SELECTOR).forEach(el=>{
-        const c = el.dataset.cipher;
-        el.textContent = state.mapping[c] || '';
-      });
-      setAlphabetUsed();
-      renderKey();
-    }
-
-    /* =========================================================
-       Event wiring
-    ========================================================= */
-    // Update slots on ciphertext changes
-    els.cipherInput.addEventListener('input', ()=>{
-      state.cipherText = els.cipherInput.value;
-      buildSlots();
-      refreshAll();
-      // Optional persistence for ciphertext (uncomment if desired):
-      // try { localStorage.setItem('ciphertext', state.cipherText); } catch(e) {}
-    });
-
-    // Global keyboard shortcuts for slot editing & navigation
-    document.addEventListener('keydown', (e)=>{
-      const active = document.activeElement;
-
-      // Arrow navigation between slots (works when ANY slot is focused)
-      if (active && active.classList.contains('slot')) {
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-          e.preventDefault();
-          focusRelativeSlot(e.key === 'ArrowRight' ? 1 : -1);
-          return;
-        }
-      }
-
-      // Letter entry / clearing for editable (letter) slots
-      if(active && active.classList.contains('slot') && active.dataset.cipher){
-        if(e.key.length === 1 && /[a-zA-Z ]/.test(e.key)){
-          const cipher = active.dataset.cipher;
-          const k = e.key.toUpperCase();
-          if(k === ' '){
-            assignMapping(cipher, null);
-            refreshAll();
-            focusFirstOf(cipher);
-            e.preventDefault();
-            return;
+            e.preventDefault(); assignMapping(cipher,val); refreshAll(); refocus(here);
+          } else if(e.inputType && e.inputType.startsWith('delete')){
+            e.preventDefault(); assignMapping(cipher,null); refreshAll(); refocus(here);
           }
-          assignMapping(cipher, k);
-          refreshAll();
-          focusFirstOf(cipher);
-          e.preventDefault();
-        }
-        if(e.key === 'Backspace' || e.key === 'Delete'){
-          const cipher = active.dataset.cipher;
-          assignMapping(cipher, null);
-          refreshAll();
-          focusFirstOf(cipher);
-          e.preventDefault();
-        }
-      }
-    });
-
-    /* =========================================================
-       App init
-    ========================================================= */
-    buildAlphabet();
-    setAlphabetUsed();
-    renderKey();
-
-    // Restore saved ciphertext if you want persistence (commented by default):
-    // try { const saved = localStorage.getItem('ciphertext'); if (saved !== null) els.cipherInput.value = saved; } catch(e) {}
-
-    // Seed from textarea
-    state.cipherText = els.cipherInput.value;
-    buildSlots();
-    refreshAll();
-
-    // Restore saved font if any
-    try {
-      const savedFont = localStorage.getItem('cipherFont');
-      if (savedFont) setCipherFont(savedFont);
-    } catch (e) {}
-
-    // Font UI handlers
-    els.fontSelect.addEventListener('change', () => {
-      const val = els.fontSelect.value;
-      if (val === '__custom__') {
-        const custom = els.fontCustom.value.trim();
-        if (custom) setCipherFont(custom);
+        });
+        cell.appendChild(slot);
+        const under=document.createElement('div'); under.className='under cipher-char'; under.textContent=cipher; cell.appendChild(under);
       } else {
-        setCipherFont(val);
+        const frozen=document.createElement('div'); frozen.className='slot lock'; frozen.textContent=ch; frozen.setAttribute('aria-hidden','true'); cell.appendChild(frozen);
+        const under=document.createElement('div'); under.className='under'; under.innerHTML='&nbsp;'; cell.appendChild(under);
+      }
+      els.slotsGrid.appendChild(cell);
+    }
+    applyHighlights();
+    if(state.analysisOpen) runAnalysis();
+  }
+  function highlightSame(cipher,on){
+    els.slotsGrid.querySelectorAll(`${SLOT_SELECTOR}[data-cipher="${cipher}"]`).forEach(el=>el.classList.toggle('same-c',on));
+  }
+  function placeCaretAtEnd(el){ const r=document.createRange(); r.selectNodeContents(el); r.collapse(false); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+  function refocus(el){ if(!el) return; el.focus({preventScroll:false}); placeCaretAtEnd(el); }
+  function focusRelativeSlot(dir){
+    const slots=Array.from(els.slotsGrid.querySelectorAll(SLOT_SELECTOR)); if(!slots.length) return;
+    let idx=slots.indexOf(document.activeElement); if(idx===-1) idx=0; else{ idx+=dir; idx=Math.max(0,Math.min(slots.length-1,idx)); }
+    const next=slots[idx]; next.focus({preventScroll:false}); placeCaretAtEnd(next);
+  }
+
+  /* ---------- Fonts ---------- */
+  function setCipherFont(fontFamily){ document.documentElement.style.setProperty('--cipher-font', fontFamily); try{ localStorage.setItem('cipherFont', fontFamily);}catch(e){} }
+  async function loadCustomFontFromFile(file){
+    if(!file) return;
+    const base=file.name.replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/,'');
+    const familyName='UserFont_'+(base.replace(/[^a-z0-9_\-]/gi,'')||'Custom');
+    const data=await file.arrayBuffer(); const face=new FontFace(familyName, data); await face.load(); document.fonts.add(face);
+    const fallback=els.fontCustom.value || 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+    const familyList='"'+familyName+'", '+fallback; setCipherFont(familyList); els.fontCustom.value='"'+familyName+'"'; if(els.fontSelect) els.fontSelect.value='__custom__';
+  }
+
+  /* ---------- Corpus ---------- */
+  const CORPUS = {
+    movies: {
+      easy: [
+        "After all, tomorrow is another day.",
+        "You can't handle the truth!",
+        "May the Force be with you.",
+        "I'll get you, my pretty, and your little dog too!",
+        "Here's looking at you, kid.",
+        "Life finds a way."
+      ],
+      medium: [
+        "I am serious. And don't call me Shirley.",
+        "I'm going to make him an offer he can't refuse.",
+        "Why so serious?",
+        "To infinity and beyond!"
+      ],
+      hard: [
+        "Rosebud.",
+        "As if!",
+        "ET phone home.",
+        "Run!"
+      ]
+    },
+    philosophy: {
+      easy: [
+        "He who has a why to live can bear almost any how.",
+        "Happiness is the highest good, sought for its own sake.",
+        "We are what we repeatedly do; excellence, then, is not an act but a habit."
+      ],
+      medium: [
+        "The unexamined life is not worth living.",
+        "I think therefore I am.",
+        "Man is condemned to be free."
+      ],
+      hard: [
+        "Know thyself.",
+        "Becoming is better than being.",
+        "Nothing is enough for the man to whom enough is too little."
+      ]
+    },
+    facts: {
+      easy: [
+        "A day on Venus is longer than its year because it spins slowly and orbits quickly.",
+        "Hot water can freeze faster than cold in some conditions, known as the Mpemba effect."
+      ],
+      medium: [
+        "Octopuses have three hearts.",
+        "Sharks existed before trees."
+      ],
+      hard: [
+        "Bananas are berries.",
+        "Honey never spoils."
+      ]
+    }
+  };
+  function titleCase(s){ return s.replace(/(^|[_\-\s])(\w)/g, (_,p1,p2)=> (p1 ? ' ' : '') + p2.toUpperCase()); }
+  function populateThemes(){
+    const themes=Object.keys(CORPUS); els.makeTheme.innerHTML='';
+    const optR=document.createElement('option'); optR.value='random'; optR.textContent='Random'; els.makeTheme.appendChild(optR);
+    themes.forEach(t=>{ const o=document.createElement('option'); o.value=t; o.textContent=titleCase(t); els.makeTheme.appendChild(o); });
+    els.makeTheme.value='random';
+  }
+
+  /* ---------- Generator helpers ---------- */
+  const DIFF_RANGE={ easy:[140,240], medium:[90,140], hard:[50,90] };
+  function poolFor(theme,diff){
+    const themeObj=CORPUS[theme]||CORPUS.movies;
+    const specific=(themeObj && themeObj[diff])||[];
+    return specific.length ? specific : [...(themeObj.easy||[]), ...(themeObj.medium||[]), ...(themeObj.hard||[])];
+  }
+  function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+  const decks={}; // theme -> diff -> [idx]
+  function ensureDeck(theme,diff){
+    if(!decks[theme]) decks[theme]={};
+    const pool=poolFor(theme,diff);
+    if(!decks[theme][diff] || decks[theme][diff].length===0) decks[theme][diff]=shuffle(Array.from({length:pool.length},(_,i)=>i));
+  }
+  function takeFromDeck(theme,diff){ ensureDeck(theme,diff); return decks[theme][diff].pop(); }
+  function getSelectedTheme(){ const t=els.makeTheme.value; if(t && CORPUS[t]) return t; const themes=Object.keys(CORPUS); return themes[Math.floor(Math.random()*themes.length)]; }
+  function pickHiddenPlaintext(theme,diff){
+    const chosenTheme=getSelectedTheme();
+    const pool=poolFor(chosenTheme,diff);
+    if(!pool.length) return "This is a placeholder message for a cryptogram.";
+    const [minL,maxL]=DIFF_RANGE[diff]||DIFF_RANGE.medium;
+    let fallback=null;
+    for(let tries=0; tries<pool.length; tries++){
+      const idx=takeFromDeck(chosenTheme,diff); const t=pool[idx]; const L=t.length; if(fallback===null) fallback=t;
+      if(L>=minL && L<=maxL) return t;
+    }
+    return fallback || pool[0];
+  }
+
+  function makeKey({disallowSelfMaps=false}={}){
+    const alpha=letters.slice(); const perm=letters.slice();
+    for(let i=perm.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [perm[i],perm[j]]=[perm[j],perm[i]]; }
+    if(disallowSelfMaps){ for(let i=0;i<26;i++){ if(perm[i]===alpha[i]){ const j=(i+1)%26; [perm[i],perm[j]]=[perm[j],perm[i]]; } } }
+    const key={}; for(let i=0;i<26;i++){ key[alpha[i]]=perm[i]; } return key;
+  }
+  function encryptUpper(plaintext,key){
+    let out=''; for(const ch of plaintext){ if(/[A-Za-z]/.test(ch)){ const u=ch.toUpperCase(); out += key[u] || u; } else out+=ch; } return out;
+  }
+  function clearMappings(){ for(const l of letters){ state.mapping[l]=null; state.reverse[l]=null; } setAlphabetUsed(); renderKey(); document.querySelectorAll('.slot[data-cipher]').forEach(el=>el.textContent=''); }
+
+  function surpriseGenerate(){
+    const theme=els.makeTheme.value||'random';
+    const diff=els.makeDiff.value||'medium';
+    const plaintext=pickHiddenPlaintext(theme,diff);
+    const key=makeKey({ disallowSelfMaps: diff!=='easy' });
+    const cipher=encryptUpper(plaintext,key);
+    state.cipherText=cipher; els.cipherInput.value=cipher; clearMappings(); buildSlots(); refreshAll();
+    state._hiddenPlaintext=plaintext; state._activeKey=key; state._seed=Math.floor(Math.random()*2**31); updateButtons();
+    showToast("New cryptogram generated");
+  }
+  function rekeySamePlaintext(){
+    if(!state._hiddenPlaintext){ updateButtons(); return; }
+    const diff=els.makeDiff.value||'medium';
+    const key=makeKey({ disallowSelfMaps: diff!=='easy' });
+    const cipher=encryptUpper(state._hiddenPlaintext,key);
+    state.cipherText=cipher; els.cipherInput.value=cipher; clearMappings(); buildSlots(); refreshAll();
+    state._activeKey=key; state._seed=Math.floor(Math.random()*2**31); updateButtons();
+    showToast("Key reshuffled");
+  }
+  function encryptMyText(){
+    const pt=(els.myPlaintext.value||"").trim();
+    if(!pt){ alert("Please paste or type your plaintext first."); return; }
+    const diff=els.makeDiff.value||'medium';
+    const key=makeKey({ disallowSelfMaps: diff!=='easy' });
+    const cipher=encryptUpper(pt,key);
+    state.cipherText=cipher; els.cipherInput.value=cipher; clearMappings(); buildSlots(); refreshAll();
+    state._hiddenPlaintext=pt; state._activeKey=key; state._seed=Math.floor(Math.random()*2**31); updateButtons();
+    showToast("Your plaintext was encrypted");
+  }
+
+  /* ---------- Mapping refresh ---------- */
+  function assignMapping(cipher,plain){
+    const prevPlain=state.mapping[cipher]; if(prevPlain===plain) return;
+    if(plain){ const prevOwner=state.reverse[plain]; if(prevOwner && prevOwner!==cipher){ state.mapping[prevOwner]=null; state.reverse[plain]=null; } }
+    state.mapping[cipher]=plain||null;
+    if(prevPlain) state.reverse[prevPlain]=null;
+    if(plain) state.reverse[plain]=cipher;
+  }
+  function refreshAll(){
+    document.querySelectorAll(SLOT_SELECTOR).forEach(el=>{ const c=el.dataset.cipher; el.textContent=state.mapping[c]||''; });
+    setAlphabetUsed(); renderKey(); applyHighlights(); if(state.analysisOpen) runAnalysis();
+  }
+
+  /* ---------- Analysis & Highlights ---------- */
+  function getLetterSlots(){
+    const slots = Array.from(document.querySelectorAll(SLOT_SELECTOR));
+    return slots.map(el => ({ el, idx: Number(el.dataset.index), c: el.dataset.cipher }));
+  }
+  function splitWords(){
+    const chars = getLetterSlots();
+    const words = [];
+    let cur = [];
+    const charByIdx = new Map(chars.map(x=>[x.idx,x]));
+    for (let i=0;i<state.cipherText.length;i++){
+      const slot = charByIdx.get(i);
+      if(slot){ cur.push(slot); }
+      else{
+        if(cur.length){ words.push({ start: cur[0].idx, end: cur[cur.length-1].idx, letters: cur.slice() }); cur = []; }
+      }
+    }
+    if(cur.length) words.push({ start: cur[0].idx, end: cur[cur.length-1].idx, letters: cur.slice() });
+    return words;
+  }
+  function countNgrams(n){
+    const words = splitWords();
+    const map = new Map();
+    words.forEach(w => {
+      if (w.letters.length < n) return;
+      for (let i=0;i<=w.letters.length-n;i++){
+        const gram = w.letters.slice(i,i+n).map(x=>x.c).join('');
+        const span = w.letters.slice(i,i+n).map(x=>x.el);
+        const rec = map.get(gram) || [];
+        rec.push(span);
+        map.set(gram, rec);
       }
     });
-    els.fontCustom.addEventListener('change', () => {
-      const custom = els.fontCustom.value.trim();
-      if (custom) {
-        setCipherFont(custom);
-        els.fontSelect.value = '__custom__';
+    return map;
+  }
+  function countDoubles(){
+    const words = splitWords();
+    let total = 0;
+    words.forEach(w => {
+      for(let i=0;i<w.letters.length-1;i++){
+        if(w.letters[i].c === w.letters[i+1].c) total++;
       }
     });
-    els.fontFile.addEventListener('change', async () => {
-      const file = els.fontFile.files && els.fontFile.files[0];
-      if (file) {
-        try {
-          await loadCustomFontFromFile(file);
-        } catch (err) {
-          console.error(err);
-          alert('Could not load that font file. Try ttf/otf/woff/woff2.');
+    return total;
+  }
+  function applyHighlights(){
+    document.querySelectorAll('.hl-bigram,.hl-trigram,.hl-double,.hl-len1,.hl-len2,.hl-len3').forEach(el => {
+      el.classList.remove('hl-bigram','hl-trigram','hl-double','hl-len1','hl-len2','hl-len3');
+    });
+    if(!state.cipherText) return;
+    const words = splitWords();
+
+    if(state.highlights.doubles){
+      words.forEach(w => {
+        for(let i=0;i<w.letters.length-1;i++){
+          if(w.letters[i].c === w.letters[i+1].c){
+            w.letters[i].el.classList.add('hl-double');
+            w.letters[i+1].el.classList.add('hl-double');
+          }
         }
-      }
+      });
+    }
+
+    if(state.highlights.len1 || state.highlights.len2 || state.highlights.len3){
+      words.forEach(w => {
+        const L = w.letters.length;
+        const cls = L===1?'hl-len1':L===2?'hl-len2':L===3?'hl-len3':null;
+        if(cls && state.highlights['len'+L]){
+          w.letters.forEach(slot => slot.el.classList.add(cls));
+        }
+      });
+    }
+
+    if(state.highlights.bigrams){
+      const bi = countNgrams(2);
+      for(const [g,occ] of bi){ if(occ.length >= 2){ occ.forEach(span => span.forEach(el => el.classList.add('hl-bigram'))); } }
+    }
+    if(state.highlights.trigrams){
+      const tri = countNgrams(3);
+      for(const [g,occ] of tri){ if(occ.length >= 2){ occ.forEach(span => span.forEach(el => el.classList.add('hl-trigram'))); } }
+    }
+  }
+
+  function analyzeFreq(){
+    const counts = Object.fromEntries(letters.map(l=>[l,0]));
+    for(const ch of (state.cipherText||'')){
+      if(/[A-Za-z]/.test(ch)){ counts[ch.toUpperCase()]++; }
+    }
+    const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
+    const arr = letters.map(l => ({ l, n: counts[l], p: counts[l]*100/total })).sort((a,b)=>b.n - a.n);
+    els.tblFreq.innerHTML='';
+    arr.slice(0,10).forEach(row=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML = '<td>'+row.l+'</td><td class="text-end">'+row.n+'</td><td class="text-end">'+row.p.toFixed(1)+'%</td>';
+      els.tblFreq.appendChild(tr);
     });
+    return arr;
+  }
+
+  function computeTop(map, topN){
+    const list = [];
+    for (const [g, occ] of map){
+      const count = occ.length;
+      if (count >= 2) list.push({ gram:g, count, occ });
+    }
+    list.sort((a,b)=> b.count - a.count || a.gram.localeCompare(b.gram));
+    return list.slice(0, topN);
+  }
+
+  function clickableGramList(container, items){
+    container.innerHTML = items.length ? "" : '<span class="text-secondary small">No repeating items</span>';
+    items.forEach(x => {
+      const s = document.createElement('span');
+      s.textContent = x.gram + ' ×' + x.count;
+      s.className = 'badge rounded-pill text-bg-info-subtle text-info-emphasis';
+      s.style.cursor = 'pointer';
+      s.addEventListener('click', ()=> flashGram(x.gram));
+      container.appendChild(s);
+    });
+  }
+
+  function flashGram(gram){
+    const n = gram.length;
+    const map = countNgrams(n);
+    const occ = map.get(gram) || [];
+    const elsFlat = occ.flat();
+    if(!elsFlat.length) return;
+    elsFlat.forEach(el => el.classList.add('pulse'));
+    setTimeout(()=> elsFlat.forEach(el => el.classList.remove('pulse')), 900);
+    elsFlat[0].scrollIntoView({ behavior:'smooth', block:'center', inline:'center' });
+  }
+
+  function analyzeNgrams(){
+    const bi = computeTop(countNgrams(2), 12);
+    const tri = computeTop(countNgrams(3), 12);
+    clickableGramList(els.listBigrams, bi);
+    clickableGramList(els.listTrigrams, tri);
+    return { bi, tri };
+  }
+
+  /* ---------- Tips ---------- */
+  const HINT_LETTERS = [
+    ["E",12.70],["T",9.06],["A",8.17],["O",7.51],["I",6.97],["N",6.75],["S",6.33],["H",6.09],["R",5.99],["D",4.25],
+    ["L",4.03],["C",2.78],["U",2.76],["M",2.41],["W",2.36],["F",2.23],["G",2.02],["Y",1.97],["P",1.93],["B",1.49],
+    ["V",0.98],["K",0.77],["J",0.15],["X",0.15],["Q",0.10],["Z",0.07]
+  ];
+  const HINT_BIGRAMS = ["TH","HE","IN","EN","NT","RE","ER","AN","TI","ES","ON","AT","SE","ND","OR","AR","AL","TE","CO","DE"];
+  const HINT_TRIGRAMS = ["THE","AND","THA","ENT","ING","ION","TIO","FOR","NDE","HAS","NCE","EDT","TIS","OFT","STH","MEN"];
+  const HINT_DOUBLES = ["LL","TT","EE","SS","OO","RR","DD","PP","FF","NN"];
+  const HINT_WORDPOS = {
+    start: [["T",15.9],["A",15.5],["I",8.2],["S",7.8],["O",7.1],["C",6.0],["M",4.3],["F",4.1],["P",4.0],["W",3.8]],
+    end: [["E",19.2],["S",14.3],["D",9.2],["T",8.6],["N",7.9],["Y",7.3],["R",6.9],["O",4.7],["L",4.6],["F",4.1]]
+  };
+  const HINT_WORDS1 = ["A","I"];
+  const HINT_WORDS2 = ["of","to","in","it","is","as","at","on","by","he","be","or","an","if","we","do","up","me","my","no","so"];
+  const HINT_WORDS3 = ["the","and","for","are","but","not","you","his","her","she","was","one","our","out","can","who","had","has"];
+
+  function buildTips(){
+    const tips = [];
+    const words = splitWords();
+    const n1 = words.filter(w=>w.letters.length===1).length;
+    const n2 = words.filter(w=>w.letters.length===2).length;
+    const n3 = words.filter(w=>w.letters.length===3).length;
+    const doubles = countDoubles();
+    const freq = analyzeFreq();
+    const { bi, tri } = analyzeNgrams();
+
+    if(n1>0){
+      tips.push(`There ${n1===1?'is':'are'} ${n1} one-letter word${n1===1?'':'s'} — try mapping them to <b>A</b> or <b>I</b>.`);
+    }
+    if(n2>0){
+      tips.push(`You have ${n2} two-letter words — common options include <b>${HINT_WORDS2.slice(0,10).join('</b>, <b>')}</b>.`);
+    }
+    if(n3>0){
+      tips.push(`You have ${n3} three-letter words — test <b>${["the","and","for","are","not","you"].join('</b>, <b>')}</b>.`);
+    }
+    if(doubles>0){
+      tips.push(`Double letters spotted (${doubles}) — frequent doubles are <b>${HINT_DOUBLES.join('</b>, <b>')}</b>.`);
+    }
+    if(freq.length && freq[0].n > 0){
+      const top = freq[0].l;
+      tips.push(`Cipher letter <b>${top}</b> is the most frequent — in English, <b>E</b> is often most common; also <b>T, A, O, I, N</b> are high.`);
+    }
+    if(bi.length){
+      const names = bi.slice(0,3).map(x=>x.gram + '×' + x.count).join(', ');
+      tips.push(`Repeating bigrams: <b>${names}</b>. Try <b>${HINT_BIGRAMS.slice(0,8).join('</b>, <b>')}</b>.`);
+    }
+    if(tri.length){
+      const names = tri.slice(0,3).map(x=>x.gram + '×' + x.count).join(', ');
+      tips.push(`Repeating trigrams: <b>${names}</b>. Test <b>${["THE","AND","ING","ION","TIO","FOR"].join('</b>, <b>')}</b>.`);
+    }
+    tips.push(`Word edges: common starts <b>${HINT_WORDPOS.start.slice(0,6).map(x=>x[0]).join('</b>, <b>')}</b>; endings <b>${HINT_WORDPOS.end.slice(0,6).map(x=>x[0]).join('</b>, <b>')}</b>.`);
+
+    els.tipsList.innerHTML = tips.length ? tips.map(t=>`<li class="mb-1">${t}</li>`).join('') : '<li class="text-secondary">Start typing or generate a cryptogram to see tips.</li>';
+  }
+
+  function runAnalysis(){ buildTips(); }
+
+  /* ---------- Hints Panel Content ---------- */
+  function fillHints(){
+    // Letters
+    els.hintLetters.innerHTML='';
+    HINT_LETTERS.forEach(([l,p])=> els.hintLetters.insertAdjacentHTML('beforeend', `<tr><td>${l}</td><td class="text-end">${p.toFixed(2)}%</td></tr>`));
+    // Bigrams
+    els.hintBigrams.innerHTML='';
+    HINT_BIGRAMS.forEach(g=> els.hintBigrams.insertAdjacentHTML('beforeend', `<span class="badge rounded-pill text-bg-secondary">${g}</span>`));
+    // Trigrams
+    els.hintTrigrams.innerHTML='';
+    HINT_TRIGRAMS.forEach(g=> els.hintTrigrams.insertAdjacentHTML('beforeend', `<span class="badge rounded-pill text-bg-secondary">${g}</span>`));
+    // Doubles
+    els.hintDoubles.innerHTML='';
+    HINT_DOUBLES.forEach(g=> els.hintDoubles.insertAdjacentHTML('beforeend', `<span class="badge rounded-pill text-bg-secondary">${g}</span>`));
+    // Word positions
+    els.hintWordPos.innerHTML='';
+    const start = HINT_WORDPOS.start.map(([l,p])=> `<span class="badge rounded-pill text-bg-secondary me-1 mb-1">${l} (start ${p}%)</span>`).join('');
+    const end = HINT_WORDPOS.end.map(([l,p])=> `<span class="badge rounded-pill text-bg-secondary me-1 mb-1">${l} (end ${p}%)</span>`).join('');
+    els.hintWordPos.innerHTML = `<div class="small mb-1">${start}</div><div class="small">${end}</div>`;
+    // Tiny words
+    els.hintTiny1.innerHTML = HINT_WORDS1.map(w=>`<span class="badge rounded-pill text-bg-secondary">${w}</span>`).join('');
+    els.hintTiny2.innerHTML = HINT_WORDS2.map(w=>`<span class="badge rounded-pill text-bg-secondary">${w}</span>`).join('');
+    els.hintTiny3.innerHTML = HINT_WORDS3.map(w=>`<span class="badge rounded-pill text-bg-secondary">${w}</span>`).join('');
+  }
+
+  /* ---------- Events ---------- */
+  els.cipherInput.addEventListener('input', ()=>{
+    state.cipherText=els.cipherInput.value; buildSlots(); refreshAll();
+    state._hiddenPlaintext=null; state._activeKey=null; updateButtons();
+  });
+  document.addEventListener('keydown', (e)=>{
+    const active=document.activeElement;
+    if(active && active.classList.contains('slot')){
+      if(e.key==='ArrowLeft' || e.key==='ArrowRight'){ e.preventDefault(); focusRelativeSlot(e.key==='ArrowRight'?1:-1); return; }
+    }
+    if(active && active.classList.contains('slot') && active.dataset.cipher){
+      if(e.key.length===1 && /[a-zA-Z ]/.test(e.key)){
+        const cipher=active.dataset.cipher; const k=e.key.toUpperCase();
+        if(k===' '){ assignMapping(cipher,null); refreshAll(); refocus(active); e.preventDefault(); return; }
+        assignMapping(cipher,k); refreshAll(); refocus(active); e.preventDefault();
+      }
+      if(e.key==='Backspace' || e.key==='Delete'){ const cipher=active.dataset.cipher; assignMapping(cipher,null); refreshAll(); refocus(active); e.preventDefault(); }
+    }
+  });
+
+  // Font controls
+  try{ const savedFont=localStorage.getItem('cipherFont'); if(savedFont) setCipherFont(savedFont);}catch(e){}
+  els.fontSelect.addEventListener('change', ()=>{ const val=els.fontSelect.value; if(val==='__custom__'){ const custom=els.fontCustom.value.trim(); if(custom) setCipherFont(custom); } else setCipherFont(val); });
+  els.fontCustom.addEventListener('change', ()=>{ const custom=els.fontCustom.value.trim(); if(custom){ setCipherFont(custom); els.fontSelect.value='__custom__'; } });
+  els.fontFile.addEventListener('change', async ()=>{ const file=els.fontFile.files && els.fontFile.files[0]; if(file){ try{ await loadCustomFontFromFile(file);}catch(err){ console.error(err); alert('Could not load that font file. Try ttf/otf/woff/woff2.'); } } });
+
+  // Panels (non-blocking)
+  function toggle(el, show){
+    if(typeof show==='boolean'){ el.classList.toggle('show', show); }
+    else el.classList.toggle('show');
+  }
+  function openAnalysis(){ state.analysisOpen=true; runAnalysis(); toggle(els.panelAnalysis, true); }
+  function closeAnalysis(){ state.analysisOpen=false; toggle(els.panelAnalysis, false); }
+  function openHints(){ fillHints(); toggle(els.panelHints, true); }
+  function closeHints(){ toggle(els.panelHints, false); }
+
+  // Toolbar & nav buttons
+  if(els.btnShowAnalysis) els.btnShowAnalysis.addEventListener('click', openAnalysis);
+  els.btnToggleAnalysisNav.addEventListener('click', openAnalysis);
+  els.btnCloseAnalysis.addEventListener('click', closeAnalysis);
+
+  els.btnToggleHintsNav.addEventListener('click', openHints);
+  if(els.btnToggleHintsSection) els.btnToggleHintsSection.addEventListener('click', openHints);
+  els.btnCloseHints.addEventListener('click', closeHints);
+
+  
+// Highlight checkbox bindings
+function bindHighlightToggle(el, key){
+  if(!el) return;
+  el.addEventListener('change', ()=>{
+    state.highlights[key] = !!el.checked;
+    applyHighlights();
+    if(state.analysisOpen) runAnalysis();
+  });
+}
+bindHighlightToggle(els.chkBigrams, 'bigrams');
+bindHighlightToggle(els.chkTrigrams, 'trigrams');
+bindHighlightToggle(els.chkDoubles, 'doubles');
+bindHighlightToggle(els.chkLen1, 'len1');
+bindHighlightToggle(els.chkLen2, 'len2');
+bindHighlightToggle(els.chkLen3, 'len3');
+
+  // Generator buttons
+  els.btnSurprise.addEventListener('click', surpriseGenerate);
+  els.btnNewKey.addEventListener('click', rekeySamePlaintext);
+  els.btnNewKeySolver.addEventListener('click', rekeySamePlaintext);
+  els.btnEncryptMine.addEventListener('click', encryptMyText);
+
+  // Toast helper
+  function showToast(msg){
+    const wrap = document.createElement('div');
+    wrap.className = 'position-fixed top-0 start-50 translate-middle-x p-3';
+    wrap.style.zIndex = 1090;
+    const toast = document.createElement('div');
+    toast.className = 'toast align-items-center text-bg-dark border-0 show';
+    toast.setAttribute('role', 'status');
+    toast.innerHTML = '<div class="d-flex"><div class="toast-body">'+msg+'</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>';
+    wrap.appendChild(toast); document.body.appendChild(wrap);
+    setTimeout(()=>{ toast.classList.remove('show'); wrap.remove(); }, 1400);
+  }
+
+  // Init
+  buildAlphabet(); setAlphabetUsed(); renderKey(); populateThemes();
+  state.cipherText = document.getElementById('cipherInput').value; buildSlots(); refreshAll(); updateButtons();
   </script>
 </body>
 </html>
