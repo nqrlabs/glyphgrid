@@ -591,57 +591,884 @@
 
   /* ---------- Corpus ---------- */
   const CORPUS = {
-    movies: {
-      easy: [
-        "After all, tomorrow is another day.",
-        "You can't handle the truth!",
-        "May the Force be with you.",
-        "I'll get you, my pretty, and your little dog too!",
-        "Here's looking at you, kid.",
-        "Life finds a way."
+    "movies": {
+      "easy": [
+        "Cinema feels like shared dreaming: a hush as the lights dim, a rush as the screen blooms alive, and strangers lean forward together, chasing wonder through flicker, shadow, music, and breath.",
+        "In the glow of the projector, we borrow lives not our own, wear their hopes for a while, and return changed, pockets full of lines, faces, and feelings that linger after credit rolls.",
+        "A good theater asks you to surrender time and attention, then rewards you with textures: velvet dark, whispering air, popcorn warmth, and a story that climbs your ribs and drums there.",
+        "Great movies teach patience; they plant images like seeds, and days later you notice what sprouted: a gesture, a color, a chord, a sentence that stays and keeps unfolding meaning.",
+        "Some scenes feel inevitable, as if the world arranged itself to arrive there: a quiet doorway, a look held too long, and then the truth walks in, unannounced but perfectly timed.",
+        "Sound design is a second script: a kettle’s hiss, a door’s tired hinge, rain tapping the roof of a getaway car, and the soft click when someone decides they can no longer wait.",
+        "Editing is music without instruments: rhythms of glances and spaces, cuts that breathe, and a sudden silence that lands like a downbeat, telling you to pay attention right now.",
+        "The best villains do not think they are villains; they carry a wound, a rule they refuse to bend, and a gaze that asks the hero to step closer and see the family resemblance.",
+        "Comedy protects the fragile truth with laughter; the joke is a key that opens a room you feared, and inside you find embarrassment, tenderness, and relief sitting on the same couch.",
+        "A small prop can hold a galaxy of motive: a scuffed lighter, a ticket stub, a letter folded until the crease turns white, each item stubborn as a secret waiting to be read.",
+        "A crowd scene is organized chaos: extras crossing on cues, buses sighing at curbs, steam lifting from vents, and in the middle, two people talking like the world forgot to be loud.",
+        "Credits honor the invisible hands: wranglers, riggers, colorists, drivers, medics, and the patient person who resets the lamp, again and again, until the reflection is finally kind."
       ],
-      medium: [
-        "I am serious. And don't call me Shirley.",
-        "I'm going to make him an offer he can't refuse.",
-        "Why so serious?",
-        "To infinity and beyond!"
+      "medium": [
+        "A closeup is a promise that the smallest motion matters: a blink, a swallow, a breath that stumbles on the truth it is almost ready to say.",
+        "A montage compresses longing into rhythm, letting time fold like paper until what once felt distant sits suddenly within reach.",
+        "Good dialogue tastes like people; it interrupts itself, changes lanes mid sentence, and lands somewhere honest without trying too hard.",
+        "The hero rarely starts brave; the camera teaches them where to look, and eventually they carry that gaze for themselves.",
+        "Genre is a contract and a dare; it brings roads and guardrails, then asks how far you will drive past the exit anyway.",
+        "Silence in film is not empty; it is a frame around what your heart is already making too much noise to ignore.",
+        "A reveal works when the answer feels both surprising and fair, like a door you passed a dozen times finally swinging open.",
+        "A tracking shot can feel like weather, moving through rooms and faces until the scene itself starts to breathe.",
+        "We root for thieves and monsters when their choices cost them something real, and the price makes sense to us.",
+        "Practical effects age like wood; they hold a texture that memory finds easier to trust than perfect glass.",
+        "A needle drop can time-travel you; one bar and you are back in a room you thought you had packed away.",
+        "Every cut is a question: what do we see next, and what do we agree to leave in the dark for now?"
       ],
-      hard: [
-        "Rosebud.",
-        "As if!",
-        "ET phone home.",
-        "Run!"
+      "hard": [
+        "Stories begin where certainty ends, and the camera waits until you notice.",
+        "A chase means little unless the runner fears more than capture.",
+        "Mystery is not confusion; it is the art of saving the right answer for later.",
+        "A prop becomes fate when no one notices it until too late.",
+        "Trust the pause; characters exhale and the truth slips out.",
+        "Romance lands when both people risk a little pride and lose it.",
+        "Horror works best when safety looks almost believable.",
+        "An honest twist feels earned, not forced by thunder.",
+        "The frame tells you where to look; the rest whispers.",
+        "Villains rarely wake up wicked; they argue themselves there.",
+        "Every hero pays; the final scene is the receipt, itemized by choices they cannot undo.",
+        "Credits are a map of care; follow names to see the hands behind each frame."
       ]
     },
-    philosophy: {
-      easy: [
-        "He who has a why to live can bear almost any how.",
-        "Happiness is the highest good, sought for its own sake.",
-        "We are what we repeatedly do; excellence, then, is not an act but a habit."
+    "philosophy": {
+      "easy": [
+        "Philosophy begins as a long conversation with our own doubt: why is there something rather than nothing, what counts as a good reason, and how should a finite life be spent when every choice closes a door we will never open again.",
+        "Ethics asks us to imagine the person we would trust with power, money, and time, then to become accountable to that imagined witness in our smallest decisions, when no audience is watching and it would be easy to look away.",
+        "Skepticism is not cynicism; it is the craft of patient doubt, testing beliefs the way a bridge tests its beams, by letting weight rest there and listening for the quiet sounds of strain that warn us to rethink before crossing.",
+        "A thought experiment is a pocket theater: you step inside with an assumption, move the furniture of the world around, notice which commitments wobble, and step back out carrying a cleaner sense of what you truly mean.",
+        "Ancient questions travel well: what is the good life, can virtue be taught, is the soul a story we tell, and how should we treat strangers who might be teachers sent in plain clothes to test our hospitality and our courage.",
+        "Metaphysics sounds abstract until grief arrives; then questions about time, identity, and persistence follow us around the house, asking whether the person we loved is gone, or present in ways the senses cannot fully measure.",
+        "We learn our values by imitation, debate, and repair; when an ideal breaks against the real, we decide whether to discard it, refine it, or rebuild our practices so that aspiration and habit can finally speak the same language.",
+        "Freedom without reflection drifts toward impulse; reflection without action calcifies into posture; the art is to carry both, like walking rhythm, left and right, attention and courage, over ground that surprises and resists.",
+        "Reason is social; even in solitude your inner voice borrows turns of phrase from teachers and rivals; your arguments keep their company, and the better your company, the more your thinking stands ready for daylight.",
+        "Language is a workshop where we repair the tools we use to think; definitions are not prison bars but scaffolds, meant to be moved as the building grows, so meaning can reach higher without falling into confusion.",
+        "When you change your mind well, you do not betray your past self; you keep a promise your past self hoped you would make, to stay teachable, to follow the better reason when it finally arrives and knocks, late but clear.",
+        "A world of plural goods means tradeoffs are not failures but choices between rival excellences; tragedy comes not only from evil but from the need to pick one worthy path while knowing another worthy path must be refused."
       ],
-      medium: [
-        "The unexamined life is not worth living.",
-        "I think therefore I am.",
-        "Man is condemned to be free."
+      "medium": [
+        "Wonder is disciplined attention that refuses to grow dull with routine; it keeps asking questions until the ordinary turns instructive.",
+        "A value becomes real when it changes what you are willing to do today, when costs reveal convictions more than words or plans.",
+        "Humility keeps our arguments porous enough to let correction enter; pride seals the room and the air grows stale as conclusions stick.",
+        "To judge a reason, ask what it would permit your clever enemy to do; if the rule protects only you, it is not a principle, it is a disguise.",
+        "Living well is not winning; it is keeping faith with better aims when results are mixed, and carrying those aims into the next small choice.",
+        "Patience is courage stretched over time; it holds the line without theatrics, until fear runs out of breath and clearer judgment can speak.",
+        "To listen is to let another mind restructure your map of the moment; you step aside, redraw a road or two, and discover a kinder route.",
+        "Principles earn trust when they restrain us most where it hurts; otherwise they are stage props we move aside when desire wants the scene.",
+        "A good question outlives many answers; it returns like weather, testing us again, and each season offers a truer reply than the last.",
+        "Clarity is kindness; it spares others the labor of decoding you and reduces the harm we do when confusion drives hurried decisions.",
+        "Hope is not optimism; it is work assigned by the future to the present, a task list in pencil that you choose to rewrite daily.",
+        "To think is to risk; ideas take shape where refusal might stand, and courage keeps the door unlocked long enough to let revision in."
       ],
-      hard: [
-        "Know thyself.",
-        "Becoming is better than being.",
-        "Nothing is enough for the man to whom enough is too little."
+      "hard": [
+        "Character is policy for days without witnesses; keep it when no one tallies the cost.",
+        "Dignity begins where usefulness ends; do not measure a life by what it produces for you.",
+        "Choice reveals value; habit exposes truth; watch what recurs when no one is watching.",
+        "Doubt is a tool, not a home; sharpen it, use it, then set it down when reasons arrive.",
+        "Justice is love reorganized for strangers; law translates care into public protection.",
+        "Meaning grows where attention lingers; to love is to notice more without growing bored.",
+        "The self is a story told in verbs; watch decisions, repairs, and promises, not labels.",
+        "Freedom needs memory and restraint; inherited limits keep our power from eating us.",
+        "Power without answerability decays into fog; demand reasons while reason is possible.",
+        "Time edits us; grief proofs the draft; acceptance is not approval but a way to move.",
+        "Conscience is a quiet, stubborn minority; give it quorum before you seek applause.",
+        "Truth survives tests; slogans avoid them; invite pressure until what remains holds."
       ]
     },
-    facts: {
-      easy: [
-        "A day on Venus is longer than its year because it spins slowly and orbits quickly.",
-        "Hot water can freeze faster than cold in some conditions, known as the Mpemba effect."
+    "fun_facts": {
+      "easy": [
+        "Honey found in ancient tombs remained edible because its low water content and natural acidity discourage microbes; sealed from air, it can last for ages, a sweet time capsule that tastes like fields and patience.",
+        "Sharks swam the seas before forests shaded the land; cartilage frames and keen senses carried them through extinctions, so when you watch waves, you are looking at a road their ancestors traveled long before leaves.",
+        "Bananas count as berries in botanical terms, while strawberries do not; labels at the market reflect kitchens more than science, proof that words and categories serve different masters depending on the task at hand.",
+        "Octopuses keep three hearts beating, two for gills and one for the body; they taste with their arms and can solve puzzles, which makes an escape artist with a soft body and curiosity a challenge for any aquarium.",
+        "A day on Venus outlasts its year because the planet spins very slowly while circling the Sun faster; its clouded sky hides a hot, crushing world where lead would soften and winds sweep endlessly around the globe.",
+        "Wombat droppings are famously cube shaped; the odd geometry helps them stack without rolling, useful for marking territory in rocky burrows where messages must stay put long enough for neighbors to read them.",
+        "Glaciers store ancient air as bubbles; a core sample becomes a timeline you can breathe, revealing cold snaps, ash from faraway volcanoes, and the slow handwriting of climate across ages of silent snow.",
+        "Cats do not taste sweetness; their receptors changed, so syrup and cake speak a language they cannot hear, which might explain why a rustling bag means salt or fat to them, but sugar is only crinkly paper.",
+        "Jellyfish are mostly water shaped by nerves; some bloom in numbers after warm seasons and calm seas, becoming ghostly fields that drift and pulse like living weather made of umbrellas and invisible threads.",
+        "A koala’s fingerprints resemble ours so closely that early investigators worried they could confuse crime scenes; nature sometimes reuses good designs in places we do not expect, a quiet rhyme across species.",
+        "Pistachios can spark on cargo ships if piled and heated with oil; self warming nuts become a tiny chemistry lesson about oxidation, air, and time conspiring to light snacks with no match in sight.",
+        "Tardigrades endure bitter cold, heat, and dryness by curling into protective stillness; later they wake and continue, tiny proof that life can hit pause and survive moments that would erase most other creatures."
       ],
-      medium: [
-        "Octopuses have three hearts.",
-        "Sharks existed before trees."
+      "medium": [
+        "Crows recognize faces and can teach others, building a neighborhood memory that outlives seasons.",
+        "A group of flamingos rests in turns, sharing balance like a relay so the flock keeps watch and warm.",
+        "Whales sing across long distances; deep water bends sound, letting voices carry beyond sight.",
+        "Sea otters hold hands while drifting to avoid floating apart in sleep, a practical and adorable tether.",
+        "Mantis shrimps see colors we cannot; their eyes judge lightning fast, perfect for life among sharp coral.",
+        "A cloud can weigh more than a heavy truck, yet hangs because rising air supports its crowded, tiny droplets.",
+        "Peanuts are not nuts but legumes; kitchen names and botany sometimes travel different roads.",
+        "Pineapples grow from a single flower cluster; each scale is one bloom joined into a spiky fruit.",
+        "Bees dance maps; a waggle tells the sun’s angle, the distance, and the taste worth chasing.",
+        "Giant pandas digest bamboo poorly, yet their days revolve around chewing enough to make it work.",
+        "Camels store fat, not water, in humps; the stash fuels travel and helps keep heat at bay.",
+        "Moss can green a stone where roots cannot; it drinks fog, holds rain, and engineers tiny forests."
       ],
-      hard: [
-        "Bananas are berries.",
-        "Honey never spoils."
+      "hard": [
+        "Bananas are berries; strawberries are not, botanically.",
+        "Octopuses have three hearts and blue blood under low oxygen.",
+        "A day on Venus outlasts its year due to slow spin.",
+        "Koala fingerprints can mimic ours under a lab lens.",
+        "Wombats leave cube droppings that stack without rolling.",
+        "Tardigrades survive extremes by pausing into hardened stillness.",
+        "Peanuts are legumes; kitchen names can mislead science.",
+        "Crows remember faces and can pass warnings to peers.",
+        "Bees map flowers by dancing in sun angled waggles.",
+        "Mantis shrimps see colors beyond us with rapid eyes.",
+        "Whales share songs that drift through miles of sea.",
+        "Sea otters hold hands to keep from drifting apart."
+      ]
+    },
+    "science": {
+      "easy": [
+        "The scientific method is a humble loop: ask a clear question, make a careful guess, test it against the world, and revise, because a result you dislike still teaches you where your map needs repair.",
+        "An atom is mostly space; electrons buzz like a cloud, the nucleus sits deep and dense, and the space between things allows light, heat, and charge to thread through matter without stopping every step.",
+        "Evolution by natural selection needs variation, inheritance, and competition; traits that help a body have surviving offspring tend to spread, and small changes stack into striking differences over long tides of time.",
+        "Gravity is the shape of space and time; mass bends the stage, and objects follow the curves like marbles rolling over a taut sheet, which is why orbits look simple while the fabric beneath is doing the work.",
+        "Photosynthesis turns sunlight, water, and air into sugars and oxygen; leaves are living panels that store day in bonds, then release breath for animals and fuel the webs that thread forests and fields.",
+        "Plate tectonics drifts continents on a slow conveyor of rock; plates grind, dive, and rise, building mountains, feeding volcanoes, and setting the table for quakes that remind us the ground is not still at all.",
+        "Viruses are packets of instructions that hijack cells; the immune system reads the invasion, writes countermeasures, and keeps notes, so a second meeting runs smoother and the body remembers how to win.",
+        "Telescopes collect light like rain barrels, gathering faint photons from far away; since light takes time, a deep look is also a look back, a quiet time machine pointed at the growing universe.",
+        "A microscope swaps scale for wonder; glass and light conspire to reveal cells, crystals, and twitching microbes, and you learn that a drop of pond water is a crowded city with no need of streets.",
+        "Peer review is a cultural tool; before a claim joins the library, other minds test methods, poke holes, and ask for clearer proof, because good ideas brighten when they survive deliberate, informed doubt.",
+        "A model is a map, not the land; it simplifies to predict, then earns trust when its forecasts match reality, and loses it when nature hands back surprises that the equations never saw coming.",
+        "Data become insight when shown with care; a tidy plot can reveal a pattern the table hides, but even pretty pictures can mislead, so labels, scales, and context matter as much as color and curve."
+      ],
+      "medium": [
+        "A hypothesis is a testable claim; an experiment is a question asked with careful controls and measures.",
+        "Correlation hints at a link, not a cause; without a mechanism or a trial, the pattern may be luck.",
+        "Energy changes form but the total stays put; motion, heat, and light trade places under rules we can test.",
+        "A good graph earns trust with honest scales, readable labels, and data that match the story you tell.",
+        "Randomized trials balance the unknowns, so differences at the end point back to the treatment.",
+        "A control group shows what happens without the change; it gives the result a clear backdrop.",
+        "Error bars confess uncertainty; they say, here is our best estimate and the range we expect around it.",
+        "Open data and code let others rerun your steps, find mistakes, and build new work on solid ground.",
+        "In physics, symmetry often signals a law; when a rule stays the same, a conserved quantity appears.",
+        "A catalyst speeds a reaction without being spent; it lowers the hill so molecules meet more easily.",
+        "Neurons fire in patterns; learning rewires strengths between them, changing how signals echo.",
+        "Climate is the long conversation of weather; trends, not days, tell us how the system is shifting."
+      ],
+      "hard": [
+        "Absence of evidence is not evidence of absence; check power.",
+        "Extraordinary claims need extraordinary proof, or at least robust, repeatable tests.",
+        "All models are wrong; some are useful when errors are understood.",
+        "Entropy measures spread; left alone, order tends to loosen into mess.",
+        "Charge moves and fields arise; a changing field makes light.",
+        "Blind analysis guards against bias by hiding answers until the end.",
+        "Bayesian thinking updates belief as evidence arrives, bit by bit.",
+        "Noise looks like signal until you ask how often chance would mimic it.",
+        "Reproducibility is a floor, not a ceiling; start there, then climb.",
+        "Microscopes and telescopes both buy clarity with careful calibration.",
+        "A null result can be valuable; it redraws the map of plausible ideas.",
+        "Scale matters; what works in a flask can fail in a field or a body."
+      ]
+    },
+    "space": {
+      "easy": [
+        "A night sky is a time machine; starlight travels for ages, arriving as whispers from distant seasons. When you look up, you borrow ancient photons and let them sketch old weather across your present moment.",
+        "Galaxies collide without many stars touching; space is mostly room. Gravity braids their shapes, stirring gas into new nurseries where fresh stars ignite, proof that even wrecks can bloom into brightness.",
+        "A comet is a wandering archive of ice and dust, stored cold in the dark until gravity nudges it sunward; then heat lifts a glowing veil and the tail writes calligraphy across the planets.",
+        "Planets keep time by falling forever; an orbit is a graceful miss, a sideways fall wrapped around a star. The balance of motion and pull turns empty distance into a repeating path.",
+        "The Moon steadies our seas and seasons; its tug gathers tides and its phases pace calendars. Craters record ancient impacts like scars, making our quiet companion a journal of violent history.",
+        "Auroras happen when charged storms from the Sun comb Earth’s magnetic fields, guiding light into curtains. The sky becomes a living river, green and rose, rippling like silk shaken by invisible hands.",
+        "Telescopes do patient arithmetic with light, adding faint photons until a picture appears. Each exposure is a vote from the dark, and taken together they elect a galaxy into view.",
+        "The Milky Way is not a band of milk but a rotating city of stars; dust in its lanes dims the glow like weather, turning the grand avenue overhead into a whispery river.",
+        "Spacecraft age like sailors; paint peels, heaters fail, and yet their signals keep walking home through the cold, carrying postcards from beyond the orbit of comfort and the borders of sunlight.",
+        "Mars keeps a memory of water in dry deltas and mineral veins; robots read that history like field geologists, wheels crunching ancient beds as if scrolling backward through vanished weather.",
+        "Gravity waves are ripples in spacetime from massive dances; detectors listen with improbable stillness, hearing a brief chirp when distant black holes clap and the fabric rings like a drum.",
+        "A star is a balancing act: fusion pushes out, gravity pulls in, and between them a steady glow persists for eons; when the fuel falters, the star chooses a dramatic ending."
+      ],
+      "medium": [
+        "An orbit is a sideways fall that keeps missing the ground, a balance between motion and the star’s pull.",
+        "Comets wake near the Sun; ice steams, dust lifts, and a bright tail sketches motion across the sky.",
+        "Auroras are charged particles guided by magnetic fields, painting shifting curtains of light near the poles.",
+        "Galaxies merge like slow tides; stars rarely collide, but gas compresses and fresh stars kindle.",
+        "The Moon’s tug shapes tides and steadies Earth’s tilt, helping seasons hold a gentler rhythm.",
+        "Telescopes collect faint light for long moments, stacking whispers into pictures our eyes can finally read.",
+        "A nebula is a stellar nursery; gas and dust gather, collapse, and light a new star.",
+        "Solar wind is a steady outflow of charged particles streaming from the Sun into space.",
+        "A black hole is a region where gravity wins; even light cannot turn and leave.",
+        "Mars writes in rust and rock; dry channels hint that water once traced its surface.",
+        "The Milky Way arches overhead, a river of stars partly hidden by veils of dust.",
+        "Space is not empty; it hums with particles, fields, and faint background light."
+      ],
+      "hard": [
+        "An orbit is a fall that keeps missing the ground forever.",
+        "Auroras are solar storms guided by Earth’s magnetic rails.",
+        "Comets wake near the Sun; ice steams and tails write motion.",
+        "Galaxies merge slowly; stars seldom collide, gas births new suns.",
+        "The Moon’s pull raises tides and calms Earth’s wandering tilt.",
+        "A black hole curves spacetime so tightly that light cannot leave.",
+        "Nebulae gather dust and gas, collapse, and ignite young stars.",
+        "Telescopes add faint photons, stacking whispers into images.",
+        "Solar wind streams outward, a constant breeze of charged particles.",
+        "Mars keeps dry river maps pressed into rusted rock.",
+        "Gravitational waves are spacetime ripples from massive dances.",
+        "The Milky Way is a rotating city of stars seen edge on."
+      ]
+    },
+    "history": {
+      "easy": [
+        "History is a long conversation with the dead and the unborn; we borrow voices from letters, laws, and ruins, then answer for a while, knowing someone later will annotate our claims with kinder tools and a wider view.",
+        "Archives hold more than pages; they store the temperatures of rooms, the smudges of haste, and the pauses between sentences where decisions hardened into policy and ordinary lives were quietly bent around them.",
+        "Archaeology reads what wind and water tried to erase: broken bowls, soot in ovens, pollen in mud, and footprints hardened by time; from scraps, patient hands rebuild a morning that once felt forgettably routine.",
+        "Maps are arguments as much as guides; borders, colors, and fonts declare priorities, elevating certain rivers and shrinking others, teaching travelers where power believed the world should be noticed and named.",
+        "Plagues redraw calendars; markets slow, rituals change, and new words enter daily talk; in the margins, someone writes a weather note beside a prayer, pinning fear to a day so the future can touch it and learn.",
+        "Coins carry propaganda that fits a pocket: faces, mottos, and myths pass from hand to hand until royalty becomes numismatic fact and the price of bread quietly records the rise and fall of distant wars.",
+        "Oral history preserves tones that ink cannot: chuckles, hesitations, a name said with warmth or warning; the tape remembers room sounds and breath, turning recollection into a small theater of human proof.",
+        "Timelines tame chaos into sequence, but causation still hides in the spaces; one reform enables a technology that unlocks a market that feeds a city that changes what a poet dares to describe aloud.",
+        "Every era thinks itself modern; then a new material, engine, or discovery arrives and yesterday’s confidence becomes quaint, a reminder that certainty keeps shorter hours than curiosity and revision.",
+        "Letters move slower than rumors; by the time a seal is broken, a promise may already be outdated, and policy born in delay meets a crowd; minutes later, a diary captures the gap and calls it history.",
+        "Monuments say as much about their builders as their subjects; stone chooses memory carefully, praising what sponsors loved and leaving shadows where debts and losses asked for smaller, humbler markers.",
+        "In kitchens as in courts, decisions compound; which grain to plant, which road to mend, which tax to spare—these local choices steer empires inch by inch, until maps change shape and poets rename the wind."
+      ],
+      "medium": [
+        "A chronicle lists events; a history argues about causes and patterns among them.",
+        "Winners write, but losers leave clues: debts, graves, letters that never reached home.",
+        "Dates anchor stories; without them, rumor floats and cause drifts out of reach.",
+        "Technology alters what counts as evidence, expanding the chorus of the past.",
+        "Census tables whisper patterns that speeches miss; numbers grieve in columns.",
+        "Borders harden briefly; trade and families keep crossing while flags change.",
+        "A diary is a lens set to one life; its edges still show the weather of an age.",
+        "Revolutions begin as repairs, then learn they have replaced the door itself.",
+        "Chronology is necessary; explanation is earned by testing rival maps of cause.",
+        "Silences matter; an empty ledger line can mark fear as clearly as ink marks pride.",
+        "Rituals outlast regimes; crowns fall, but weddings teach continuity by habit.",
+        "Memory edits; anniversaries keep some pages open while others gather dust."
+      ],
+      "hard": [
+        "Sources disagree; your task is not to choose a favorite but to test claims.",
+        "Periodization simplifies; seasons of change rarely obey clean chapter breaks.",
+        "Material limits steer ideals; grain, roads, and credit shape lofty plans.",
+        "Bias is not a stain you remove once; it is a climate you correct for daily.",
+        "An absence in the record may be strategy, fear, or ash—read carefully.",
+        "Local stories revise empire; scale is a method, not a virtue by itself.",
+        "Continuity hides inside change; names shift while habits carry the day.",
+        "Statistics need context; a rate without a denominator flatters error.",
+        "Causation is braided; single bullets rarely move history alone.",
+        "Artifacts testify narrowly; provenance and layer turn finds into facts.",
+        "Translation is interpretation; word choices tilt the past toward us.",
+        "Revision is not betrayal; it is the payment plan for accuracy."
+      ]
+    },
+    "literature": {
+      "easy": [
+        "Libraries are time machines you can browse by touch: linen pages, foxed margins, spines that creak, and the hush that gathers when minds meet across centuries, trading questions and craft through patient ink and paper.",
+        "A novel teaches you how to read it; the first chapters tune your ear to its rhythms, seat you among its strangers, and then, almost shyly, begin to reveal the rules by which wonder, danger, and truth will move.",
+        "Characters earn our trust when their wants cost them; a promise broken, a letter burned, a door not knocked upon, and suddenly the plot is not machinery but consequence, ticking inside the choices they make.",
+        "Point of view is a lens you wear; a tight first person warms every detail, while a roaming third person cools the air and shows the weather of the town, letting private decisions echo through public rooms.",
+        "Poetry saves room by craft; line breaks steer breath, images carry double duty, and sound ties thought to memory, so that hours later a single syllable returns with a shape you can feel in your mouth.",
+        "Marginalia is conversation in the wings; a penciled yes, a careful no, and a bright asterisk turn the quiet of reading into a duet where your future self will overhear what caught fire the first time.",
+        "Theme is the pattern you notice when the lights come on; it glints in repeated images, in the kinds of endings allowed, in who is forgiven and who is not, and in the way silence is used when words would fail.",
+        "Translation is hospitality; the guest text arrives with customs, idioms, and music, and the host language sets a new table, trying to honor meaning without packing away the spice that made the dish itself.",
+        "Worldbuilding works when details serve need; a coin, a law, a superstition, a street vendor’s call, each one explains why a character acts that way, making the map feel lived in rather than merely labeled.",
+        "Plot twists feel fair when the seeds were visible; the gardener writer planted them where you could look, trusting you to notice later, and to smile when the harvest arrives wearing yesterday’s clues.",
+        "An unreliable narrator does not lie to you so much as live; their limits and desires stain the lens, and the pleasure is in learning how to read the tint, seeing both the world and the tint at once.",
+        "Short stories invite precision; a single change ripples across an afternoon and returns as meaning, leaving just enough space for the reader to step in and finish the walk to the door the author opened."
+      ],
+      "medium": [
+        "A good first line tilts the room, making you lean toward a story you didn’t know you were ready to enter.",
+        "Setting is character underfoot; streets and weather reveal what a heart considers normal or strange.",
+        "Conflict clarifies desire; when pressed, a protagonist shows the map they have been hiding.",
+        "A metaphor earns its keep when it explains and surprises without stealing the scene.",
+        "Pacing is breath control; scenes tighten, then loosen, so tension and relief trade fair turns.",
+        "Voice is diction plus attitude; even silence sounds different once the voice is known.",
+        "Revision is where the book learns its face; draft by draft, the blur becomes a person.",
+        "Backstory matters only when it changes a choice; otherwise it is weather best left offstage.",
+        "Dialogue sings when subtext carries weight and the spoken words pretend to talk about tea.",
+        "Scenes end on a shift: decision, discovery, danger, or a door finally opening.",
+        "Symbols work when they obey the world; a recurring river should still follow gravity.",
+        "Endings feel true when they solve the right question, not merely the loud one."
+      ],
+      "hard": [
+        "A book is a mirror; you finish the pages finishing you.",
+        "Voice is the fingerprint of thought printed in sound.",
+        "Plot is desire under pressure, measured in choices.",
+        "A scene ends when the room can’t stay the same any longer.",
+        "Metaphor is a bridge that holds only if both banks are real.",
+        "Pacing is breath; too little and the heart stalls, too much and it blurs.",
+        "Theme is what repeats on purpose; motif is how you notice.",
+        "Revision is mercy for readers and truth for the writer.",
+        "An ending should feel earned, inevitable, and still a little new.",
+        "Characters reveal themselves by what they want and refuse.",
+        "Setting is the soft hand that guides behavior without orders.",
+        "Point of view decides which secrets light is allowed to hold."
+      ]
+    },
+    "proverbs": {
+      "easy": [
+        "Advice that fits in a pocket is worth carrying: greet dawn with honest work, share food when you can, mend your tools before they fail, and keep a joke ready for rain that will not stop.",
+        "When pride sets the table, hunger stays for dessert; a humble cook serves enough for truth as well, and the village eats together without arguing about who gets the bigger spoon.",
+        "Promises age like rope: knots hold if tied in quiet weather and checked at each crossing; pull too hard, boast too loud, and the strands remember every careless tug you gave them.",
+        "A map drawn by fear marks monsters at every bend; a map drawn by patience lists ferries and inns; both see danger, but only one leaves room for kindness to appear upon arrival.",
+        "Borrowed trouble charges interest; haul what today asks and pay it in full, then sleep; tomorrow’s load will stand there in the morning, no heavier for being left alone tonight.",
+        "Words travel on the backs of tone and timing; say the right truth at the wrong hour and it limps; fit it to the listener’s step, and the message arrives with its shoes still clean.",
+        "Keep company with people who repair things; their hands teach your mind the grammar of fixes: loosen, listen, align, and tighten; then the squeak you feared becomes a story you solved.",
+        "A short cut that crosses a neighbor’s field turns long when the farmer notices; better to add ten honest minutes than spend sixty explaining footprints where trust should have grown.",
+        "When a quarrel grows teeth, give it bread; a shared chore eats anger faster than speeches, and two tired backs discover they were arguing with hunger more than with each other.",
+        "Luck waters seeds already planted; the wind may bring rain, but the furrows you cut yesterday decide whether the puddle becomes a harvest or a mirror where you practice regret.",
+        "Silence after apology is a kind of receipt; do not demand change like a parade; show it like sunrise, one small brightness at a time, until even a skeptic can find their coat without a lamp.",
+        "Doors open easier for those who knock like they belong to the neighborhood; learn names, carry your share, return borrowed things whole, and the street itself will vouch for you."
+      ],
+      "medium": [
+        "Boast less; the work will speak once it has something worth saying; humility keeps the door open for help and correction",
+        "A closed fist cannot hold help; loosen your grip and try listening first, because advice will not land on clenched pride",
+        "Measure twice, promise once; repairs begin where exaggeration ends, and steady hands make fewer apologies later",
+        "Walk with people who return tools; their habits polish yours, and borrowed patience comes back sharper than steel",
+        "Good news travels soft; loud claims need witnesses they rarely have; let results carry your voice across the room",
+        "Ask for advice before you need it; panic spends wisdom poorly; calm planning saves sweat and neighbor favors",
+        "Better a small bridge mended today than a grand road planned forever; passable beats perfect when others are waiting",
+        "Kindness keeps accounts; debts shrink when gratitude is paid promptly, and grudges stay small when watered with thanks",
+        "Carry water for the fire you might need to put out tomorrow; preparation is quiet courage dressed as chores",
+        "Patience is speed with a longer view and fewer accidents; haste writes its reports in dents and splinters",
+        "Eat after you feed the story; truth cooks better on an empty boast, and flavor returns when pride leaves the pot",
+        "A joke that punches down breaks the ladder you may need later; humor should build steps, not kick them away"
+      ],
+      "hard": [
+        "Speak softly; let deeds give your voice its volume.",
+        "Borrowed pride comes due with interest no one can pay.",
+        "A clean ledger sleeps; hidden costs keep noisy hours.",
+        "Trade shortcuts for neighbors; trust shortens every road.",
+        "Fix what you step on; the path remembers your feet.",
+        "Sharp tongues dull quickly; whet kindness instead.",
+        "Storms test roofs; time tests promises the same way.",
+        "If anger chops wood, regret stacks it by moonlight.",
+        "A locked jaw cannot eat wisdom; unclench and chew.",
+        "Small habits vote daily; results count their ballots.",
+        "Keep tools dry; rust spreads faster than excuses do.",
+        "Leave rooms kinder than you found them; doors gossip."
+      ]
+    },
+    "riddles": {
+      "easy": [
+        "By day I hide in pockets and drawers; by night I unfold kingdoms of lines. I show where rivers bend and roads rest, yet if you enter me you are lost at once. What am I?",
+        "I drink sunlight to tell you time. I wear a face that never speaks, circle after circle, and even in silence I teach a room to breathe in my rhythm. What am I?",
+        "I am a house with only one room; guests come and go but never meet. I change my clothes with every visitor, yet I never grow or shrink. What am I?",
+        "You borrow me but never own me; you keep me yet I wander; I live on shelves and in laps; I am quiet until eyes arrive and wake my voices. What am I?",
+        "I move without feet, I whisper without breath, I cross oceans without wetting a toe, and still I can tip a ship. Touch me and I vanish. What am I?",
+        "I make music with no throat, I keep pace for dancers I never see, and when I break, silence learns how loud it can be. What am I?",
+        "I hold treasure made of weather and memory; when you look, I give it back at once but only backward. I never steal, I never keep, I only repeat. What am I?",
+        "I travel faster than any messenger, yet I am born after the speaker; I arrive where ears are waiting and disappear where letters begin. What am I?",
+        "I am a door that moves but never changes rooms; I open to a world that stays behind glass. I leaf and leaf and still stay rooted. What am I?",
+        "I have a bed but never sleep, banks but no coins, a mouth that never eats, and I carry whole towns on my back. What am I?",
+        "I share my skin with many faces; each face is a season, each season a promise. Turn me and I grow older without moving. What am I?",
+        "I keep secrets in plain sight; my lines are borders of meaning, my pages are windows; the more you take from me, the more I have to give. What am I?"
+      ],
+      "medium": [
+        "I grow without rain and shrink without shadow; I follow you faithfully but vanish in the dark. What am I?",
+        "I speak without tongue and sing without air; cliffs answer me and forests repeat me. What am I?",
+        "I am taken before I am given, and once I am given I cannot be taken back. What am I?",
+        "I have keys that open no doors and teeth that bite no bread; I sing when fingers walk. What am I?",
+        "I break without falling and fall without moving; morning repairs me, evening undoes me. What am I?",
+        "I step through walls yet leave them whole; I wander rooms but never touch the floor. What am I?",
+        "I keep many stories but never remember; I am returned with new scars of ink. What am I?",
+        "I am lighter than a whisper and stronger than iron; I can lift roofs and sink ships. What am I?",
+        "I cross a bridge before it stands and leave it behind before it falls; you meet me every moment. What am I?",
+        "I can fill a room or empty a heart; I am kept in jars but never poured. What am I?",
+        "I am a road with no dust, a sea with no salt, a sky with no birds; yet you travel me daily. What am I?",
+        "I follow rules no one wrote; I measure all without a ruler and forgive no debt. What am I?"
+      ],
+      "hard": [
+        "I am your companion at noon and your stranger at night. What am I?",
+        "I echo everyone and belong to none. What am I?",
+        "I borrow faces and return only light. What am I?",
+        "I have a heart of stone and a tongue of water. What am I?",
+        "I vanish when held and appear when freed. What am I?",
+        "I keep time by eating it. What am I?",
+        "I move a house without lifting a brick. What am I?",
+        "I am the silence between two answers. What am I?",
+        "I carry letters that never leave home. What am I?",
+        "I am a question that arrives after every decision. What am I?",
+        "I am the traveler that never departs the frame. What am I?",
+        "I am the weight that grows when shared. What am I?"
+      ]
+    },
+    "adventure": {
+      "easy": [
+        "Adventure begins as a small permission: step off the familiar path, listen for water you cannot yet see, and let curiosity pace your breath until the map gives up and the landscape starts teaching its own names.",
+        "A pack carries more than gear; it holds your reasons, your doubts, and those quiet adjustments to hope that happen between trail markers when the sun drifts, the wind turns, and you decide to keep going anyway.",
+        "Fear is a compass that needs translation; it points at risk, not retreat. Read the terrain, check the weather, name the hazards, and bring a partner. Then dare the doable and let tomorrow thank you.",
+        "Rivers teach pace; they hurry in rapids, idle in bends, and listen in pools. Follow them and you learn when to push, when to drift, and when to stop and rebuild warmth with fire, food, and steady talk.",
+        "A good route plan is a love letter to future you: spare socks, dry matches, extra calories, a turning point written in daylight, and a margin for the unknown that always arrives wearing a different hat.",
+        "Sunrise on a ridge erases last night’s doubts; distances become shape, and shape becomes a plan. You count switchbacks like beads, breathe in steady fours, and discover patience is the strongest muscle you brought.",
+        "A compass is honest even when you are not; it keeps telling north while you tell stories. Trust the needle, test the bearing against landmarks, and let a straight line rescue you from promising shortcuts.",
+        "Tracks are paragraphs left by hooves and paws; depth, stride, and drift tell weather and intent. Learning to read them turns wilderness into a library where the authors move just ahead, careful and alert.",
+        "Storms teach humility; gear fails, plans bend, and shelter becomes the only goal. Afterwards, gratitude grows strange roots: dry socks feel like luck, and a mug of broth becomes a small, reliable miracle.",
+        "Caves remind you how loud light is; switch the lamp off and your ears widen. Sound becomes guide and measure, and each careful step writes a new line in a story that smells of stone and time.",
+        "Sailing asks you to partner with pressure; canvas reshapes wind into pull, and the boat translates vectors into progress. Trim, tack, and watch the telltales; the shortest path may be a long, elegant angle.",
+        "Deserts reward timing; travel early and late, rest under shade at noon, carry more water than pride, and steer by cairns and stars. Out there, silence earns its own vocabulary and thrift becomes a friend."
+      ],
+      "medium": [
+        "Risk changes flavor when measured instead of guessed; plan the route, pack redundancy, choose a partner, and then proceed with eyes open and margins intact.",
+        "Maps are promises; compasses are proof. Believe both, but confirm with the land beneath your boots.",
+        "Homesickness visits every camp; feed it a warm meal, a letter read aloud, and a clear goal for morning.",
+        "If you get lost, get small: stop, think, observe, plan. Panic burns daylight and distance.",
+        "Light is life in cold places; dry fuel and a steady spark turn shivers into sleep and courage.",
+        "Navigation begins before departure; pack decisions are wayfinding in disguise, guiding what you can risk.",
+        "Pace beats speed; finish lines appear for walkers who keep promises to water, calories, and feet.",
+        "Respect edges: cornices, slick rock, tide lines, and thin ice. Curiosity grows safer one yard back.",
+        "A whistle carries farther than a shout; three blasts ask for help, repeated in sets, while calm partners listen and answer with the same rhythm.",
+        "Knots are memory you tie in rope; practice when dry so wet nights feel shorter and safer.",
+        "Listen to locals and old trail logs; experience is a forecast written in other people’s miles.",
+        "A summit is optional; the return is mandatory. Turn around time is a promise, not a suggestion."
+      ],
+      "hard": [
+        "Turn back early; pride weighs more than a full pack.",
+        "Measure twice, step once; cliffs grade mistakes in final ink.",
+        "North is patient; learn to be, or learn to be found.",
+        "Wet cotton steals heat; choose wool or synthetics instead.",
+        "A partner halves risk and doubles stories worth keeping.",
+        "Tides write schedules; ignore them and they erase your path.",
+        "A clear plan is courage you can fold into a pocket.",
+        "Landmarks fade in fog; bearings survive the weather.",
+        "Falls begin with hurrying feet; pace is the safer brag.",
+        "Signals fail; tell someone when and where you will return.",
+        "Good boots repay kindness; treat blisters before they vote.",
+        "Turn your map until the world agrees, then move."
+      ]
+    },
+    "animals": {
+      "easy": [
+        "Urban foxes thread alleys at dusk; they test lids, read scents like headlines, and vanish when tires hiss. Watch long enough and you learn their routes, patient zigzags mapped to scraps, shade, and the kindness of imperfect fences.",
+        "Elephants teach each other paths to water, greeting with rumbling voices felt more than heard. Calves walk among pillars of careful legs, and when a matriarch pauses, the whole family listens for a memory to return.",
+        "Crows collect tools and grudges; they trade tips on good snacks and bad faces. If you feed them fairly, small gifts may appear, bright buttons and ring pull charms, as if commerce began with curiosity and shine.",
+        "Sea otters wrap in kelp to sleep so currents will not drift them apart. A pup rides her belly while she cracks shellfish on stone, kitchen and cradle afloat on a surface that reflects both clouds and appetite.",
+        "Wolves rehearse before the hunt, wheeling through practice chases that tune lungs and trust. The chorus that follows is a roll call and a map drawn in sound, each voice a compass point in fur and breath.",
+        "Hummingbirds spend daylight like coins, paying for lift with fast hearts. Flowers stamp passports on beaks with dust of pollen, and a yard becomes an airport where routes are measured in bloom times and bright turns.",
+        "Whales carry maps in memory; mothers lead calves along currents and coasts where food once rose thick. A fluke lifts, a scar tells a story, and the sea keeps its diary in migrating lines.",
+        "Ant colonies operate like cities with invisible signage; traffic shifts when crumbs fall, nurses swap roles at need, and the queen is a chorus of chemistry reminding the crowd to grow, repair, and forage.",
+        "Cats patrol the borders of comfortable rooms, tracing routes that scent and habit approve. Their blink is a slow handshake, their purr a small engine that idles best on a lap that keeps still.",
+        "Owls turn night into neighborhood, mapping mice by rustle and snow dents. Feathers edge their flight with hush, so the air learns nothing until the talons give the ground a brief and final lesson.",
+        "Beavers redraw streams one stick at a time, stacking patient angles until a pond forms and the catalog of visitors changes. Where there was a trickle, now muskrats, ducks, and dragonflies set up shop.",
+        "Penguins carry pockets of air in tight feathers, zipping through green light with bubbles for confetti. On land they trade grace for comedy, but at sea they write quick calligraphy that fish read poorly."
+      ],
+      "medium": [
+        "Octopuses solve boxes, taste with arms, and vanish behind color they mix in an instant.",
+        "Bats map rooms with sound; echoes fold the dark into a readable, flying blueprint.",
+        "Tortoises wear patience as armor; slow wins when storms and heat punish hurry.",
+        "Ravens test locks and reputations; they remember kindness and the lack of it.",
+        "Dolphins pass names in whistles; a call can point, comfort, or summon help.",
+        "Termites farm fungus in towers that breathe; vents trade heat like lungs.",
+        "Camouflage is grammar; pattern tells predators the wrong story about shape.",
+        "Meerkats post sentries so others can dig; a chirp can mean snake or sky.",
+        "Butterflies drink minerals from mud; shimmering needs salts as well as nectar.",
+        "Lyrebirds remix forests; chainsaws, flutes, alarms, all enter the playlist.",
+        "Platypuses read electricity in water, hunting with eyes politely closed.",
+        "Geese argue in V formation; rotation shares wind bills and keeps tempers even."
+      ],
+      "hard": [
+        "Owls fly on muffled wings; silence hunts before talons do.",
+        "Ant trails are news lines written in evaporating ink.",
+        "Elephants remember paths; drought tests the old maps.",
+        "Crows swap tools and gossip; generosity earns shine.",
+        "Wolves sing the map; each voice marks a direction.",
+        "Otters hold hands so currents do not steal sleep.",
+        "Hummingbirds spend heartbeats to buy seconds of lift.",
+        "Whales write routes in scars and returning seasons.",
+        "Beavers edit rivers; wetlands appear in the margin.",
+        "Penguins trade clumsiness on land for rocket grace.",
+        "Bats fold darkness into images stitched by echoes.",
+        "Camouflage lies politely until motion tells the truth."
+      ]
+    },
+    "creativity": {
+      "easy": [
+        "Creativity begins as attention on purpose: you notice small frictions, save tiny sparks, and return tomorrow with kinder tools, letting rough ideas grow handles you can grip without breaking their surprise.",
+        "Constraints are not cages; they are rails that carry you across the blank. Pick a palette, limit time, choose a form, and watch options turn into decisions that finally learn how to move.",
+        "A sketchbook is a greenhouse for half-ideas; draw badly, write quickly, and label nothing final. Later the messy pages vote, and a direction you could not see yesterday steps forward politely.",
+        "Drafts are bridges between hunch and clarity. The first one is scaffolding with splinters; the next swaps guesswork for structure; by the third, the path stops wobbling and your feet can look up.",
+        "Play lowers the cost of being wrong. When outcomes matter less, experiments multiply, and in that cheerful glut of attempts one odd success begins to sound like a voice worth following.",
+        "Creative blocks dislike movement; take a walk, change tools, copy something you admire by hand, and ask small questions a finished work might answer. Momentum is gentler than motivation.",
+        "Feedback works when you ask for the job you want it to do: clarity check, taste check, or goal check. Invite specifics, time-box the conversation, and leave with one change you will try today.",
+        "Originality is often accurate remix: learn the canon, notice gaps, rotate the lens, and combine familiar parts until a new purpose clicks into place and asks to be made again with care.",
+        "Deadlines are decisions disguised as dates; they teach scope and mercy. Promise a slice you can deliver, finish it honestly, and let the finished thing teach you how to attempt the next slice.",
+        "Environment edits output. Tidy your desk, rename your files, mute the noisy tabs, and place the next action where your eyes will trip on it. Friction shrinks and the work slides forward.",
+        "Taste outpaces skill; that gap is normal. Keep shipping small versions while your hands catch up to your eye. Each finished attempt moves the horizon a little closer to where you meant to go.",
+        "Silence is a tool; turn down inputs until your own sentences grow audible again, then capture them before the world grows loud and convinces you they were never waiting there at all."
+      ],
+      "medium": [
+        "Make something tiny every day; scale invites excuses, smallness invites progress.",
+        "Name the next step, not the masterpiece; direction beats drama in early hours.",
+        "When stuck, switch verbs: cut, collage, trace, reorder, mute, exaggerate.",
+        "Steal like a librarian: cite, study, transform, and shelve your sources well.",
+        "Good ideas arrive dressed as bad timing; take notes and keep moving.",
+        "Show work earlier than feels safe; reality is the best collaborator.",
+        "Constraints reduce panic; pick three colors and one rule, then begin.",
+        "Protect mornings from meetings; prime hours deserve your messiest draft.",
+        "Separate drafting from judging; two roles, two rooms, no overlap.",
+        "Curate inputs on purpose; your taste is a diet with long effects.",
+        "Version your experiments; labels make returning cheap and fearless.",
+        "End each session with a breadcrumb note telling tomorrow where to start."
+      ],
+      "hard": [
+        "Start small; momentum scales better than courage.",
+        "Limits focus attention; focus feeds invention.",
+        "Draft fast, revise slow; switch hats deliberately.",
+        "Notes are seeds; plant many, prune often.",
+        "Process outlives mood; ritual beats inspiration.",
+        "Ship slices; finished teaches more than perfect.",
+        "Borrow forms, change aims; remix with respect.",
+        "Walk the problem; motion unties quiet knots.",
+        "Ask for edits by job: clarity, taste, or goal.",
+        "Tool choice shapes thought; swap to see anew.",
+        "Name the constraint; let it be your collaborator.",
+        "Quit at a question; future you will rush back."
+      ]
+    },
+    "wisdom": {
+      "easy": [
+        "Wisdom grows when curiosity stays; ask kinder questions, listen past your turn, and let better reasons revise your map, because pride draws borders while learning redraws roads toward places you could not see.",
+        "Experience is a slow teacher with fair tests; it grades on patience, attention, and repair, and it returns your paper every day with small notes written in the margins of ordinary choices.",
+        "Speak less to sound wise, but listen more to become wise; the ears collect raw truth that polish cannot fake, and silence lets other people finish the thought you were rushing to borrow.",
+        "Advice that fits tomorrow must survive tonight; sleep on big decisions, recheck your motives at dawn, and keep the promise that keeps you kind when the outcome does not applaud.",
+        "Good judgment is memory edited by mercy; keep the lesson, lose the bitterness, and turn the bruise into a map that guides your hands the next time a similar door invites your haste.",
+        "Time multiplies small habits; a daily sentence becomes a voice, a daily walk becomes health, and a daily apology becomes trust that does not crack when storms arrive without warning.",
+        "Choose teachers by their repairs; anyone can point to damage, but wisdom is the craft of mending, aligning, and tightening until the squeak becomes a lesson instead of a complaint.",
+        "Certainty speaks in headlines; wisdom prefers footnotes and questions. Leave space for amendment, because the truth you will need often arrives late, carrying receipts and softer light.",
+        "Anger shortens every timeline; count to ten, then to meaning. Ask what you are protecting, and whether a stronger kindness would guard it better than the sharp tool currently in your hand.",
+        "Generosity is foresight with a smile; the help you give today returns as routes you did not know you would need, and the town becomes an easier place to cross when you are tired.",
+        "Values are verbs, not slogans; if a belief never changes your schedule, it is a costume. Let principles rearrange your calendar, your spending, and your tone until they learn to walk.",
+        "Wisdom is portable humility: you admit what you do not know, carry what you can, and make room in your pack for new facts that ask the map to bend without snapping."
+      ],
+      "medium": [
+        "Stay curious longer than your temper lasts; most conflicts shrink under better questions, and better questions arrive when you breathe.",
+        "When you can choose to be right or kind, be kind first; it keeps doors open for truth, and truth travels through open doors faster.",
+        "Slow is often fast in disguise; haste buys dents and explanations you could have spared, while patience buys outcomes you can defend.",
+        "Assume good intent without surrendering good boundaries; generosity and clarity coexist, and clarity protects both sides from regret.",
+        "Learn names; respect often begins where attention remembers and pronounces carefully, because care at the threshold shapes the whole talk.",
+        "Let the next version be smaller and real; finished teaches more than grand intentions, and small shipped work grows into real momentum.",
+        "Trade opinions for experiments; reality is kinder than arguments when asked directly, and results persuade without volume.",
+        "Keep promises to yourself; private integrity funds public courage when it counts, especially when no one is there to clap.",
+        "Say what you mean, gently; clarity is a gift that reduces accidental harm, and kindness helps difficult truths land safely.",
+        "Leave a breadcrumb for tomorrow: a short note that tells you where to start again, so momentum survives the night.",
+        "Ask what this will matter in a year; adjust your tone to match the answer, and spend energy where future you will notice.",
+        "Apologize without a tour of your reasons; the fix begins when the excuse ends, and repair continues when behavior changes."
+      ],
+      "hard": [
+        "Curiosity outlives certainty; keep asking after you think you know.",
+        "Kindness scales; small decencies compound into trust you can spend.",
+        "Boundaries are bridges with tolls; cross respectfully or turn back.",
+        "Slow choices age well; hurry writes footnotes you wish you could edit.",
+        "Listen for the motive beneath the claim; people speak in layers.",
+        "Admit what changed your mind; revision is a strength, not a stain.",
+        "Own your part; shared blame spreads thin and mends slowly.",
+        "Leave room for luck; plans breathe better with margins.",
+        "Practice today what future you will thank; habit remembers.",
+        "Clarity first, then speed; order matters when stakes rise.",
+        "Disagree without contempt; respect keeps learning possible.",
+        "Stop when tired, not when done; tomorrow repairs better."
+      ]
+    },
+    "mindfulness": {
+      "easy": [
+        "Mindfulness begins as friendly attention: notice the weight of your feet, the map of your breath, the chorus of small sounds, and let judgment rest, so the moment has room to show you what it already is.",
+        "When worry runs ahead, bring the senses back like gentle dogs on a loose leash: name a color, feel fabric, hear a far train, and let the body vote before the story decides what happens next.",
+        "A pause is not empty; it is a workshop for wiser replies. One breath in, one breath out, and the heat of the first impulse cools enough for kindness and clarity to agree on the next step.",
+        "Attention shapes memory. If you sip morning light on the wall and taste your coffee without a screen, the day begins with presence, and later you can return to that anchor when storms arrive.",
+        "Gratitude is portable; count three quiet goods where you stand: clean water, a helpful voice, a body that tries again. The list changes your posture and makes the world easier to carry.",
+        "Mindful walking turns a sidewalk into a field note: heel, toe, lift, set; a breeze at the neck; the smell of rain waiting in iron. The mind calms when the map returns to the ground.",
+        "You cannot outthink a feeling, but you can outbreathe its storm. Make the exhale longer than the inhale, soften the jaw, and let the wave pass without adding thunder from your own voice.",
+        "Curiosity is kinder than control. Ask what this moment needs rather than what it owes you, and the grip loosens; choices open like windows, and the room learns to breathe again.",
+        "Noting thoughts as thoughts keeps you from wearing them as names: this is planning, this is fear, this is hunger. Label gently, then return to breath as if setting a book back on a shelf.",
+        "Boundaries protect attention. Say no with soft tone and clear eyes, then say yes to rest, food, and people who help you be the person your values would trust with a tired afternoon.",
+        "Mindfulness in conflict starts with the body: relax the shoulders, slow the breath, notice the heat in the face, and let silence braid the first bridge across the gap between two truths.",
+        "Even chores can be practice: wash one dish at a time, feel the warm water, stack with care, thank the task for its small lesson in order and enough, and notice how the mind settles."
+      ],
+      "medium": [
+        "Breathe in for a count, out a little longer; the slow exit tells your nerves the fire drill is over.",
+        "Name three things you can see, two you can feel, one you can hear; the room returns you to yourself.",
+        "When a thought yells, add the words I am noticing that; it becomes a cloud, not a command.",
+        "Put your phone in a different room for the first hour; protect the day’s opening stretch of quiet.",
+        "Walk slower to arrive sooner; calm feet make kinder choices when the turn comes.",
+        "Sip water before big talks; thirst dresses up as temper more often than pride will admit.",
+        "If you cannot change it yet, change your posture; breath follows, and thought softens with it.",
+        "Let the kettle teach patience; waiting clean of screens polishes attention for the work ahead.",
+        "Gratitude lists work best when specific; name the tiny things, not grand claims.",
+        "Schedule rests like meetings; the calendar will not defend you unless you ask it to.",
+        "Listen until you can repeat the other person’s worry fairly; then reply.",
+        "Begin again is a full practice; every breath is a restart you can trust."
+      ],
+      "hard": [
+        "Attention is a kindness you can aim; where it lands, life grows clearer.",
+        "Breathe out longer; the body learns safety from the exit.",
+        "Name the thought, do not wear it; clouds pass when not gripped.",
+        "Slow hands make fewer errors; calm is a skill you can train.",
+        "Move one thing at a time; the mind follows the feet.",
+        "Silence is not empty; it is room for wiser words to arrive.",
+        "Curiosity loosens fists; ask what this moment needs.",
+        "Boundaries are care in shape; no protects the yes that matters.",
+        "Notice, allow, choose; the pause turns heat into light.",
+        "Gratitude rewires attention toward sufficiency and ease.",
+        "When lost, return to breath; begin again without scolding.",
+        "Kind eyes, slow voice; your nervous system hears your tone."
+      ]
+    },
+    "motivation": {
+      "easy": [
+        "Momentum beats motivation on most days: start tiny, lower the bar until it is almost funny, and move. Ten quiet minutes, a single paragraph, one email drafted—small proofs that unlock the next step and invite the next.",
+        "Discipline is a kind calendar; it decides once so you do not bargain daily. Set the place, set the hour, set the first small action, and let routine carry you across mornings when your mood is late to work.",
+        "Progress hides in fractions; break the wall into bricks you can lift. Name the next brick, lift it without drama, and stack it square. A short stack built today is taller than a perfect plan not started.",
+        "Action warms thought. Begin before you believe, and belief will often arrive dressed as evidence you just created. Even clumsy starts make useful friction, and the work feels closer when the hands agree to try.",
+        "On low energy days, switch to maintenance wins: sharpen tools, tidy files, outline steps, prepare ingredients. You are still moving the story, just from the backstage where order gives tomorrow a head start.",
+        "Keep a visible ledger of done items; the mind underrates its own effort unless shown in ink. Crossed lines build a staircase of proof, and proof feeds a steadier courage than pep talks shouted at the mirror.",
+        "Pair your goal with a trigger you already trust: coffee means a page, lunch ends with a walk, the meeting finishes and the first task starts. Anchors tame drift, and drift is how weeks disappear without results.",
+        "Treat setbacks as data, not verdicts. Ask what the failure teaches about scope, timing, or tools. Adjust one variable, then try again. Curiosity will keep doors open that pride would have slammed already.",
+        "Invite accountability that respects you: a check in with a friend, a weekly note to yourself, a public log of small steps. Gentle witnesses keep momentum honest without turning effort into theater.",
+        "Protect the first hour from noise; begin with the task that moves the needle even a little. The day can grow chaotic later; let the morning teach the rest of your hours what finished feels like.",
+        "Reward loops matter. Close sessions with a small ritual—stretch, tea, a song you only play after writing. Brains remember patterns, and a pleasant exit makes tomorrow’s entrance smoother and more likely.",
+        "Remember why this matters in a way your body can feel: picture the room you are building, the person you will help, the relief you will earn. Meaning fuels patience when novelty has wandered off."
+      ],
+      "medium": [
+        "Start where your feet are; one honest step now beats a perfect step later.",
+        "Make the next action obvious and small; friction falls when choices shrink.",
+        "Show up on schedule, not on mood; consistency invites progress to find you.",
+        "When stuck, cut the task in half, then in half again, and begin there.",
+        "Stack habits on anchors you already keep; rhythm grows from familiar beats.",
+        "Measure effort you control, not outcomes you cannot; sanity follows.",
+        "Finish in a place that makes starting easy tomorrow; leave a breadcrumb.",
+        "Trade inspiration for preparation; laid out tools create their own pull.",
+        "Talk less about goals, demo more tiny results; reality persuades best.",
+        "Protect deep work with a door and a clock; promise a return to the world.",
+        "Lower the bar until you can step over it daily; raise it later with proof.",
+        "Celebrate honest tries; courage thickens when effort gets noticed."
+      ],
+      "hard": [
+        "Small daily wins compound; bet on repetition over drama.",
+        "Schedule the work; feelings can catch up en route.",
+        "Name the next step, not the mountain beyond it.",
+        "Begin before you are ready; readiness arrives after.",
+        "Cut scope, keep cadence; pace is the quiet superpower.",
+        "Energy follows action; move, then motivation appears.",
+        "Track inputs you own; let outcomes take their time.",
+        "Ritual beats willpower when weather turns rough.",
+        "Quit for today at a promising comma, not a period.",
+        "Rewrite the plan, not the goal, when reality replies.",
+        "Accountability, kindly held, outperforms private vows.",
+        "Focus on the brick in hand; walls rise from that."
+      ]
+    },
+    "mystery_arg": {
+      "easy": [
+        "An ARG starts like a rumor with coordinates missing; a poster hums at certain frequencies, a voicemail begs for a key, and a stray acrostic in the footer points toward a mailbox no map admits exists.",
+        "Clues prefer layers: a friendly blog post masks a simple cipher; the image alt text whispers a shift; and the line breaks sketch a map that only looks straight once the story remembers its spine.",
+        "Red herrings are not failures; they pace your doubt. Each wrong door marks the hallway, and by sunrise you can name the hinges by sound and guess which lock prefers a softer, slower hand.",
+        "A burner inbox receives a plain note that is anything but plain; capital letters line up like sentries, the signature miscounts itself on purpose, and the subject line refuses to sit still.",
+        "Steganography hides in habits: pixel noise that is not noise, crop lines that lean, or metadata that left its shoes on the mat. The picture smiles for the public and winks for the patient.",
+        "Live drops ask for theater: a cafe table by the window, a paperback with a folded corner, and the agreed remark about weather, delivered casually while your partner reads the door in the glass.",
+        "Teamwork wins often: one person hears patterns, another catalogs dead ends, someone rewrites the clue in calmer ink, and the quiet member asks the question that makes the whole room turn.",
+        "A trail rewards record keeping: duplicate clues, date your guesses, and log rabbit holes you closed, because tomorrow you must recall which wall already said no and which hinge needed oil.",
+        "Ciphers love keys, but keys love story; the right word belongs to the theme, the setting, or a missing friend, and the lock opens when the narrative finally learns how to say its own name.",
+        "Audio hints live in room tone; a pause lands where no pause should, a cough keeps returning, or a soft hum suggests the file carries a second message under the talk it pretends to hold.",
+        "Forum chatter is half theater and half rescue; actors nudge, players test, and mods cultivate safety so fiction can stay brave. The trick is immersion without losing consent or care.",
+        "The last step often looks obvious in hindsight; a title you skipped, a border never measured, and a habit the sender could not hide. Finish kindly and archive notes for the next storm."
+      ],
+      "medium": [
+        "Start a notebook and tag by method; track guesses, dead ends, and aha moments so patterns emerge where chaos first looked clever.",
+        "Assume the theme points at the key; story and cipher shake hands more often than chance, especially near titles and credits.",
+        "When stuck, change lenses: try letters as numbers, words as directions, or spacing as code; rotate the frame before you quit.",
+        "Normalize quick checks for steganography: odd file sizes, strange palette counts, or metadata that hums like a quiet engine.",
+        "Crowdsource carefully; share structure and method, not personal data. Collaboration works best with clear boundaries.",
+        "Trace the authorial voice; recurring jokes, favored symbols, and pet phrases often narrow the plausible key space.",
+        "Test trivial ciphers first; a fast pass for shifts and substitutions saves hours you would spend polishing the wrong idea.",
+        "Look for acrostics and acrostichs; headers, list initials, and caption starts love to hide little roads in plain sight.",
+        "Expect redirections; a solved step may be only a compass. Confirm by finding a payload, not merely a pattern.",
+        "Map the rabbit holes you close; future you will forget why a shiny route failed, and the log will save the team twice.",
+        "Respect in-world tone while staying safe; never trespass, never stalk, keep play in public and consent in view.",
+        "Archive everything; puzzles decay when sites change. Screenshots and mirrors keep trails alive for late joiners."
+      ],
+      "hard": [
+        "Theme implies key; check story nouns before brute force.",
+        "Headers hide roads; read column initials like a skyline.",
+        "If a clue feels loud, test the margins for the real whisper.",
+        "When in doubt, count; lengths and beats often carry maps.",
+        "Metadata talks; names and notes betray hurried hands.",
+        "A solved pattern without payload is not a solve yet.",
+        "Rotate formats; picture, audio, and text share tricks.",
+        "Red herrings teach pace; mark them and move on kindly.",
+        "The title is a compass more often than a trophy.",
+        "Acrostics love lists; scan the left edge with care.",
+        "Stego hates recompress; avoid resaving suspect files.",
+        "Log your path; memory flatters luck and forgets cost."
+      ]
+    },
+    "technology": {
+      "easy": [
+        "Technology is a set of repeatable tricks for moving matter, energy, and meaning; good tools make hard things easier, and great tools make new things possible, turning yesterday’s limits into tomorrow’s starting line.",
+        "Interfaces are doors; the best ones feel like windows. When a design removes friction, attention returns to the task, and the tool becomes quiet, a kind helper that lets focus carry the work across the room.",
+        "Networks braid distance into presence; a careful message crosses oceans in a breath, and collaboration gathers around shared canvases where blinking cursors behave like neighbors at the same long table.",
+        "Code is written thought that runs; logic becomes a lantern you can hand to a machine, which then carries it through dark corridors of possibility faster and more patiently than tired minds could walk alone.",
+        "Security is hospitality with boundaries; welcome the right guests, keep logs, verify claims, and treat secrets as living things that prefer shade, fresh keys, and doors that close without a loud report.",
+        "Compression is tidy storytelling for data; it finds patterns, names them once, and points back, shrinking bulk while keeping meaning so music still sings and pictures still glow across narrow pipes.",
+        "Accessibility is engineering for everyone; captions, contrast, keyboard paths, and screen reader care expand the audience from polite few to real many, turning a gadget into a civic invitation.",
+        "Reliability is drama you never see; redundancy, health checks, and graceful failure keep quiet promises so the page loads, the call connects, and the clock of a city keeps its meetings on time.",
+        "Version control is memory with manners; changes line up, comments explain intent, and a bad idea can step back without wrecking the furniture, making courage cheaper and teamwork calmer.",
+        "Battery life is borrowed daylight stored in a pocket; power budgets, efficient chips, and thoughtful sleep keep the borrowed sun alive long enough for maps, notes, and music to finish their errands.",
+        "Sensors translate the world into numbers and back again; a gentle tap, a tilt, a hum of light become inputs that let software notice posture, weather, and motion, then reply with help that fits the moment.",
+        "Ethics in tech begins as a checklist and matures into culture; consent, safety, fairness, and repair enter the design early, so bright ideas do not cast long shadows on people who never agreed to the risk."
+      ],
+      "medium": [
+        "Great tools disappear; they let you see the work instead of the interface that carries it.",
+        "Latency is felt as mood; a quick system feels kind, a slow one quietly erodes trust.",
+        "APIs are contracts; clear names and stable promises keep partners shipping with confidence.",
+        "Backups test their worth on bad days; practice restores when the sky is still blue.",
+        "Privacy is a product feature, not a policy page; design with restraint from the start.",
+        "Defaults decide more than settings; pick the safe and humane path as the first choice.",
+        "Observability turns guesswork into evidence; logs, metrics, and traces tell the story.",
+        "Caching is a promise to remember; keep it honest with expiration and validation.",
+        "Encryption guards letters on the road; strong keys and careful hands keep them safe.",
+        "Progressive enhancement serves everyone; basics first, polish where the browser can.",
+        "Rate limits are kindness to shared systems; fairness is enforced as a steady gate.",
+        "Humans are part of the system; train, document, and design for the tired operator."
+      ],
+      "hard": [
+        "Simple beats clever when failure is loud; favor clarity over tricks.",
+        "Fast is a feature until it breaks trust; measure and budget latency.",
+        "State is where bugs hide; make it explicit and keep it small.",
+        "Secure by default; opt in to risk with eyes open and logs on.",
+        "Names are design; good nouns and verbs lower future costs.",
+        "Test the restore, not just the backup; practice recovery.",
+        "Delete is forever only if you planned for tombstones.",
+        "Feature flags buy safety; ship small and watch reality.",
+        "Errors deserve context; show cause, effect, and remedy.",
+        "Sane defaults save users from expert puzzles.",
+        "Instrumentation is insurance for future you.",
+        "Ethics is scope control for harm; design for consent."
+      ]
+    },
+    "travel": {
+      "easy": [
+        "Travel begins as curiosity on foot; you pack questions, leave room for surprise, and learn that a map is a promise while the street is a teacher, correcting your guesses with smells, accents, and light.",
+        "A good itinerary is a flexible sketch, not a contract; plan anchors like beds and trains, then let markets, side streets, and weather edit the day until the city introduces you to its favorite version of itself.",
+        "Carry less than you think; comfort weighs more than clothing. Shoes matter, water matters, and kindness in the local language opens doors that guidebooks miss, because humility translates faster than grammar.",
+        "Airports teach patience and empathy; everyone is somewhere between homes, tired and hopeful. Offer your seat, share a charger, and remember that a small kindness can reframe a long delay for a stranger.",
+        "Eat where the menu is short and the noise is friendly; watch what locals order, ask one question, and say thank you with care. Flavor travels best when it is carried by manners as well as appetite.",
+        "Walking turns a city into a story; bridges become chapters, murals become footnotes, and a left turn at a bakery becomes a plot twist you remember later whenever warm bread sneaks back into your dreams.",
+        "Sunrise belongs to travelers who wake early; streets stretch and yawn, bakers set out trays, and the day opens its quiet pockets just wide enough to tuck away a memory that evening crowds would smudge.",
+        "Learn the transit map like a poem; buses and tracks stitch neighborhoods together, and confidence grows each time you change lines without drama and arrive calm enough to notice who shares your bench.",
+        "Pack a tiny repair kit and a larger sense of humor; a loose screw and a missed turn both yield to patience, and the best stories begin with a snag that taught you how to ask for help gracefully.",
+        "Travel with respect for limits; take only photos where invited, lower your voice in sacred rooms, and remember that some places ask for shoes off, hats off, and a moment of listening before you look.",
+        "Keep a paper map as a friend to your phone; batteries faint and signals sulk, but lines on paper tell a sturdy truth, and tracing a route with a finger feels like shaking hands with the place.",
+        "Write a few lines each night; names of streets, the kindness you met, the color of fruit at the market. Later those notes rescue details that memory would polish away into vague, polite brightness."
+      ],
+      "medium": [
+        "Pack light and wash often; weight steals joy faster than any delay, and laundry buys days of freedom.",
+        "Learn three phrases: please, thank you, and sorry. Doors open faster when your manners arrive first.",
+        "Eat where the line is local; patience buys better soup than glossy signs ever will.",
+        "Choose a neighborhood, not a checklist; depth beats speed when memories must fit in one suitcase.",
+        "Backup documents in two places and carry paper copies; redundancy is calm you can fold.",
+        "When lost, slow down; the city is trying to help you read it, one doorway and corner at a time.",
+        "Ask a local for one small recommendation, then ask where that choice would lead next.",
+        "Sit on public steps and listen; the rhythm of a place arrives as voices, birds, and brakes.",
+        "Carry a scarf; it is shade, blanket, belt, pillow, modesty, and a flag for friends to spot you.",
+        "Take photos of signs before museums and trails; later, context repairs what memory blurs.",
+        "Choose off days for famous sites; Tuesday quiet saves more energy than coffee can.",
+        "Leave room in the schedule for weather and wonder; both arrive uninvited and worth it."
+      ],
+      "hard": [
+        "Go slower; the street will teach what the brochure forgot.",
+        "Pack half, plan less, and carry extra patience for delays.",
+        "Learn the hello, the thanks, and the sorry in the local tongue.",
+        "Early walks gift empty plazas and honest bakery air.",
+        "A paper map never crashes; trace routes with your finger.",
+        "Sit facing the room; trains and cafes reveal quiet stories.",
+        "Ask for water and directions with the same gentle voice.",
+        "Travel light enough to run for a bus without sighing.",
+        "Buy sim cards and snacks from the busy corner shop.",
+        "Respect sacred spaces; let your camera bow to silence.",
+        "Write down names; gratitude lands better when spelled right.",
+        "Turn around time is safety, not a suggestion; keep it."
+      ]
+    },
+    "weather": {
+      "easy": [
+        "Weather is a patient engine that moves heat and water around the globe; winds ferry clouds, currents steer storms, and pressure writes quiet gradients that your skin can read before your umbrella remembers to open.",
+        "Forecasts are stories told in probabilities; models vote, satellites whisper, and the map shades confidence, so a sunny icon still means bring a plan for rain and a kind mood for delays that no one chose.",
+        "A cold front is a tidy broom; dense air advances, lifting warm air into tall clouds where drops grow heavy, thunder rehearses, and a once sleepy horizon tightens its jaw and decides to speak in light.",
+        "Fog is a cloud that decided to walk; air cools to its dew point, tiny droplets borrow the street, and familiar corners grow shy until a breeze edits the paragraph and the city remembers its edges.",
+        "Lightning is sky scale static discharge; charge separates in tall clouds, paths negotiate through air, and a sudden channel lets day step briefly into night while thunder counts the distance your heart pretends not to fear.",
+        "Snowflakes grow as stories of temperature and humidity; crystals branch where conditions allow, then drift through layers that rewrite their shape, proof that even sameness arrives with a signature if you look closely.",
+        "Humidity is comfort's quiet saboteur; high moisture slows sweat's escape, making shade feel heavy, while dry air steals water from lips and wood, teaching windows and skin the vocabulary of creak and thirst.",
+        "Hurricanes are heat engines that sip warm ocean, organize rotation, and build windows of calm at the eye; around that calm, bands of rain spin like muscle, pushing seas and tearing roofs from careless plans.",
+        "A rainbow is a cooperative between sunlight and raindrops; light enters, bends, splits, and returns, sorting colors by angle, so where you stand decides what arc exists, a private bridge that moves when you do.",
+        "Microclimates hide in hills, rivers, and streets; a city block with trees cools like dusk while nearby pavement stores noon, and a coastal slope trades fog for sun depending on the hour and the stubborn wind.",
+        "Barometers do translation work; falling pressure warns that air is rising and rain may organize, while a steady climb suggests clearing, the sky slowly returning to the steady blue sentence it prefers to speak.",
+        "Heat waves arrive as long, persuasive arguments; nights fail to cool, mornings feel borrowed from afternoon, and the body asks for shade, salt, and slower choices until the ridge relents and breezes remember mercy."
+      ],
+      "medium": [
+        "A cold front lifts warm air; clouds grow, rain forms, and wind shifts as the boundary sweeps by.",
+        "High pressure sinks air and clears skies; low pressure lifts air and builds clouds and storms.",
+        "Dew forms when air cools to saturation; surfaces borrow moisture from the quiet night.",
+        "Sea breezes trade places with land breezes as day warms shores and night returns the favor.",
+        "Thunder is heated air expanding fast; lightning's path makes a brief drum that rolls away.",
+        "Virga is rain that evaporates before reaching ground, writing ghost curtains under clouds.",
+        "Lake effect snow forms when cold air crosses warm water and lifts steam into busy clouds.",
+        "Radar sees precipitation by radio echoes; bright bands can reveal melting snow aloft.",
+        "Hail grows in strong updrafts, cycling until stones gain weight enough to fall.",
+        "A temperature inversion caps convection, trapping haze and keeping the morning quiet.",
+        "El Nino shifts winds and currents, tilting storms and droughts across far coasts.",
+        "Wind chill measures how moving air speeds heat loss, making cold feel bolder than the number."
+      ],
+      "hard": [
+        "Cold fronts lift warm air; storms often ride the boundary.",
+        "High pressure clears; low pressure builds clouds and rain.",
+        "Fog is a grounded cloud born where air cools to dew.",
+        "Lightning maps a path; thunder is the air snapping back.",
+        "Hailstones grow in loops inside strong updrafts.",
+        "Virga paints rain that dries before it finds soil.",
+        "Sea breeze by day, land breeze by night trades cool.",
+        "Rainbows sort light by angle; your stance picks the arc.",
+        "A barometer translates pressure into quiet forecasts.",
+        "Humidity changes comfort by throttling sweat's escape.",
+        "Microclimates bloom where shade, water, and stone disagree.",
+        "Heat waves demand shade, salt, and slower plans."
+      ]
+    },
+    "wordplay": {
+      "easy": [
+        "Wordplay is a gym for the tongue and the brain; you lift letters, stretch meanings, and discover that a sentence can wink while telling the truth, leaving clues in commas and jokes in the shadows of sound.",
+        "An anagram is a polite burglary; it enters a word through the front door, rearranges the furniture, and leaves the place looking familiar and new, as if meaning had been tidied by a clever guest.",
+        "Puns earn their groans by folding two roads into one step; a syllable turns, the room catches up, and laughter arrives carrying both sense and nonsense like twins sharing a single coat.",
+        "Palindromes walk forward and back with equal grace; the mirror keeps the rhythm even when meaning staggers, proof that symmetry can be music first and message second and still please both ears.",
+        "Spoonerisms bake humor by swapping starting sounds; a solemn vow becomes a volume of sowing, and dignity slips just enough to remind us that letters are dancers who sometimes trade partners mid beat.",
+        "Double meanings hide in daylight; one phrase waters a garden and a rumor at once, and listeners choose which plant to praise, grateful for the shade a clever sentence can cast over an ordinary idea.",
+        "Portmanteaus pack two words into one suitcase and close the latch with style; meaning travels lighter, fashioning shortcuts that feel like in jokes everyone is suddenly invited to enjoy.",
+        "Homophones dress alike and cause charming trouble; the ear believes both tales until context taps its watch and asks the sentence to pick which suit the truth will wear this time.",
+        "A cryptic clue is a miniature stage where definition and wordplay bow to each other; the surface tells one story while the machinery beneath clicks together like a lock choosing to be kind.",
+        "Alliteration lines words like soldiers on parade, each sound saluting the next; rhythm becomes a small engine that pulls attention along even when the cargo is ordinary freight.",
+        "Malapropisms nudge meaning off the curb and watch it wobble into traffic, funny and almost right, reminding speakers that language forgives with style when confidence outruns recall.",
+        "A mondegreen rescues misheard lyrics with perfect sincerity; wrong words arrive dressed as sense, and the ear refuses the correction because the mistake fits the heart that heard it first."
+      ],
+      "medium": [
+        "Anagrams turn order into surprise; meaning hides in the shuffle and comes back grinning.",
+        "Palindromes are mirrors that sing; step forward or back and the tune stays true.",
+        "A pun is two roads at once; groans are the toll you pay for the shortcut.",
+        "Spoonerisms swap hats on first sounds and dignity slips just enough to laugh.",
+        "Homophones ask context to judge; the ear loves both until sense picks one.",
+        "Portmanteaus travel light; two ideas share one handle with style.",
+        "Oxymorons pair polite opposites and make a spark where sense meets wit.",
+        "A pangram throws a party for every letter and leaves no guest at home.",
+        "Acrostics hide messages along the edge where patience likes to look.",
+        "Cryptic clues split into definition and mischief, both true together.",
+        "Heteronyms make the tongue choose a road; stress maps meaning.",
+        "Alliteration turns sentences into steps; sound teaches pace."
+      ],
+      "hard": [
+        "An anagram is order smiling in a new suit.",
+        "A palindrome is a mirror that remembers music.",
+        "Puns braid two meanings into one footstep.",
+        "Spoonerisms trip neatly and land on a grin.",
+        "Homophones need context like sails need wind.",
+        "Portmanteaus zip two notions into one word.",
+        "Acrostics whisper along the left hand rail.",
+        "A pangram invites every letter to dance.",
+        "Oxymorons spark where opposites shake hands.",
+        "Cryptic clues hide truth in plain daylight.",
+        "Heteronyms ask stress to choose the sense.",
+        "Alliteration lines sound up like soldiers."
       ]
     }
   };
